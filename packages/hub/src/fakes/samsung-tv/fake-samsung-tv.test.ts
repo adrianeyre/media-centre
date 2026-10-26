@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import WebSocket, { WebSocketServer } from "ws";
 
+import { POSITION_REPORT_MS } from "@media-centre/player/playback-reports";
 import {
   PLAYER_APP_ID,
   PLAYER_SOCKET_PATH,
@@ -1616,8 +1617,8 @@ describe("the fake Samsung TV's Player (FR-35)", () => {
     send({ type: "play", url, positionMs: 0 });
 
     await expect.poll(() => reports.at(-1)).toMatchObject({ state: "playing", url, durationMs: 60_000 });
-    // It plays in real time, so its position moves on, and it says so.
-    await expect.poll(() => reports.at(-1)?.positionMs ?? 0).toBeGreaterThan(0);
+    // It plays in real time, so its position moves on, and it says so, at most every POSITION_REPORT_MS.
+    await expect.poll(() => reports.at(-1)?.positionMs ?? 0, { timeout: POSITION_REPORT_MS * 3 }).toBeGreaterThan(0);
 
     send({ type: "control", control: { action: "pause" } });
     await expect.poll(() => tv?.playerStatus().playback).toBe("paused");
