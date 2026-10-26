@@ -1,0 +1,13 @@
+{
+  "name": "@media-centre/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The message types the Hub, the Remote and the Player exchange.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json"
+  }
+}

@@ -1,0 +1,1636 @@
+<!doctype html>
+<!--
+  The Media Centre website. Its double-brace placeholders are filled in by
+  site/build.ts, which holds the repository's and the site's addresses; the
+  screenshots and icons it names are copied in from docs/images/ and the Remote
+  at build time, and the font from site/fonts/. Every URL is relative, as the
+  site is served under a project page's path. Everything works without
+  JavaScript: script.mts (built into script.js) only adds the menu button, the
+  tabs, the light and dark switches on screenshots, the screenshot viewer, copy
+  buttons and the policies' dialogs.
+-->
+<html lang="en-GB" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      document.documentElement.classList.replace("no-js", "js");
+    </script>
+    <title>Media Centre: one remote for your whole home</title>
+    <meta
+      name="description"
+      content="Media Centre is a free, self-hosted remote for your whole home: Samsung TVs, Midea air conditioners, Lepro lights, Hive heating, Amazon Echo and Ring, room by room, and your own films, shows and music on any TV. It runs on your own Hub, with no account."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#080d19" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="{{SITE_URL}}/" />
+    <link rel="icon" href="favicon.ico" sizes="32x32" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="mask-icon" href="mask-icon.svg" color="#15803d" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Media Centre" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content="Media Centre: one remote for your whole home" />
+    <meta
+      property="og:description"
+      content="TVs, air conditioners, lights, heating, Echo and Ring, room by room, and your films, shows and music on any TV. Self-hosted, with no account."
+    />
+    <meta property="og:url" content="{{SITE_URL}}/" />
+    <meta property="og:image" content="{{SITE_URL}}/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Media Centre: one remote for your whole home. Runs on your own Hub, no account, open source."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Media Centre: one remote for your whole home" />
+    <meta
+      name="twitter:description"
+      content="TVs, air conditioners, lights, heating, Echo and Ring, room by room, and your films, shows and music on any TV. Self-hosted, with no account."
+    />
+    <meta name="twitter:image" content="{{SITE_URL}}/og-image.png" />
+    <meta
+      name="twitter:image:alt"
+      content="Media Centre: one remote for your whole home. Runs on your own Hub, no account, open source."
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Media Centre",
+        "description": "One remote for your whole home: Samsung TVs, Midea air conditioners, Lepro lights, Hive heating, Amazon Echo and Ring, room by room, and your own films, shows and music on any TV. Self-hosted on your own Hub, with no account.",
+        "url": "{{SITE_URL}}/",
+        "image": "{{SITE_URL}}/og-image.png",
+        "screenshot": "{{SITE_URL}}/images/screenshots/desktop-tv.png",
+        "applicationCategory": "HomeApplication",
+        "operatingSystem": "Windows, macOS, Linux, Docker",
+        "softwareRequirements": "Node 26 or later, pnpm 12 and ffmpeg, or Docker",
+        "license": "https://opensource.org/license/isc-license-txt",
+        "sameAs": "{{REPO_URL}}",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "GBP"
+        }
+      }
+    </script>
+    <link
+      rel="preload"
+      href="fonts/plus-jakarta-sans-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="script.js"></script>
+  </head>
+  <body>
+    <!-- Icons: Lucide (ISC), and the GitHub mark. -->
+    <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-tv" viewBox="0 0 24 24">
+        <path d="m17 2-5 5-5-5" />
+        <rect width="20" height="15" x="2" y="7" rx="2" />
+      </symbol>
+      <symbol id="i-film" viewBox="0 0 24 24">
+        <rect width="18" height="18" x="3" y="3" rx="2" />
+        <path d="M7 3v18" />
+        <path d="M3 7.5h4" />
+        <path d="M3 12h18" />
+        <path d="M3 16.5h4" />
+        <path d="M17 3v18" />
+        <path d="M17 7.5h4" />
+        <path d="M17 16.5h4" />
+      </symbol>
+      <symbol id="i-air-vent" viewBox="0 0 24 24">
+        <path d="M6 12H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+        <path d="M6 8h12" />
+        <path d="M18.3 17.7a2.5 2.5 0 0 1-3.16 3.83 2.53 2.53 0 0 1-1.14-2V12" />
+        <path d="M6.6 15.6A2 2 0 1 0 10 17v-5" />
+      </symbol>
+      <symbol id="i-lightbulb" viewBox="0 0 24 24">
+        <path
+          d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"
+        />
+        <path d="M9 18h6" />
+        <path d="M10 22h4" />
+      </symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24">
+        <path
+          d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+        />
+      </symbol>
+      <symbol id="i-speaker" viewBox="0 0 24 24">
+        <rect width="16" height="20" x="4" y="2" rx="2" />
+        <path d="M12 6h.01" />
+        <circle cx="12" cy="14" r="4" />
+        <path d="M12 14h.01" />
+      </symbol>
+      <symbol id="i-video" viewBox="0 0 24 24">
+        <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
+        <rect x="2" y="6" width="14" height="12" rx="2" />
+      </symbol>
+      <symbol id="i-network" viewBox="0 0 24 24">
+        <rect x="16" y="16" width="6" height="6" rx="1" />
+        <rect x="2" y="16" width="6" height="6" rx="1" />
+        <rect x="9" y="2" width="6" height="6" rx="1" />
+        <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" />
+        <path d="M12 12V8" />
+      </symbol>
+      <symbol id="i-map" viewBox="0 0 24 24">
+        <path
+          d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"
+        />
+        <path d="M15 5.764v15" />
+        <path d="M9 3.236v15" />
+      </symbol>
+      <symbol id="i-house" viewBox="0 0 24 24">
+        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+        <path
+          d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+        />
+      </symbol>
+      <symbol id="i-layout-grid" viewBox="0 0 24 24">
+        <rect width="7" height="7" x="3" y="3" rx="1" />
+        <rect width="7" height="7" x="14" y="3" rx="1" />
+        <rect width="7" height="7" x="14" y="14" rx="1" />
+        <rect width="7" height="7" x="3" y="14" rx="1" />
+      </symbol>
+      <symbol id="i-accessibility" viewBox="0 0 24 24">
+        <circle cx="16" cy="4" r="1" />
+        <path d="m18 19 1-7-6 1" />
+        <path d="m5 8 3-3 5.5 3-2.36 3.5" />
+        <path d="M4.24 14.5a5 5 0 0 0 6.88 6" />
+        <path d="M13.76 17.5a5 5 0 0 0-6.88-6" />
+      </symbol>
+      <symbol id="i-contrast" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 18a6 6 0 0 0 0-12v12z" />
+      </symbol>
+      <symbol id="i-smartphone" viewBox="0 0 24 24">
+        <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+        <path d="M12 18h.01" />
+      </symbol>
+      <symbol id="i-wifi" viewBox="0 0 24 24">
+        <path d="M12 20h.01" />
+        <path d="M2 8.82a15 15 0 0 1 20 0" />
+        <path d="M5 12.859a10 10 0 0 1 14 0" />
+        <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+      </symbol>
+      <symbol id="i-hard-drive" viewBox="0 0 24 24">
+        <line x1="22" x2="2" y1="12" y2="12" />
+        <path
+          d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"
+        />
+        <line x1="6" x2="6.01" y1="16" y2="16" />
+        <line x1="10" x2="10.01" y1="16" y2="16" />
+      </symbol>
+      <symbol id="i-cpu" viewBox="0 0 24 24">
+        <rect width="16" height="16" x="4" y="4" rx="2" />
+        <rect width="6" height="6" x="9" y="9" rx="1" />
+        <path d="M15 2v2" />
+        <path d="M15 20v2" />
+        <path d="M2 15h2" />
+        <path d="M2 9h2" />
+        <path d="M20 15h2" />
+        <path d="M20 9h2" />
+        <path d="M9 2v2" />
+        <path d="M9 20v2" />
+      </symbol>
+      <symbol id="i-shield-check" viewBox="0 0 24 24">
+        <path
+          d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+        />
+        <path d="m9 12 2 2 4-4" />
+      </symbol>
+      <symbol id="i-container" viewBox="0 0 24 24">
+        <path
+          d="M22 7.7c0-.6-.4-1.2-.8-1.5l-6.3-3.9a1.72 1.72 0 0 0-1.7 0l-10.3 6c-.5.2-.9.8-.9 1.4v6.6c0 .5.4 1.2.8 1.5l6.3 3.9a1.72 1.72 0 0 0 1.7 0l10.3-6c.5-.3.9-1 .9-1.5Z"
+        />
+        <path d="M10 21.9V14L2.1 9.1" />
+        <path d="m10 14 11.9-6.9" />
+        <path d="M14 19.8v-8.1" />
+        <path d="M18 17.5V9.4" />
+      </symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24">
+        <path d="M12 19h8" />
+        <path d="m4 17 6-6-6-6" />
+      </symbol>
+      <symbol id="i-server" viewBox="0 0 24 24">
+        <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+        <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+        <line x1="6" x2="6.01" y1="6" y2="6" />
+        <line x1="6" x2="6.01" y1="18" y2="18" />
+      </symbol>
+      <symbol id="i-sparkles" viewBox="0 0 24 24">
+        <path
+          d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"
+        />
+        <path d="M20 2v4" />
+        <path d="M22 4h-4" />
+        <circle cx="4" cy="20" r="2" />
+      </symbol>
+      <symbol id="i-scale" viewBox="0 0 24 24">
+        <path d="M12 3v18" />
+        <path d="m19 8 3 8a5 5 0 0 1-6 0zV7" />
+        <path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1" />
+        <path d="m5 8 3 8a5 5 0 0 1-6 0zV7" />
+        <path d="M7 21h10" />
+      </symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24">
+        <path d="M4 5h16" />
+        <path d="M4 12h16" />
+        <path d="M4 19h16" />
+      </symbol>
+      <symbol id="i-arrow-right" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+        <path d="m12 5 7 7-7 7" />
+      </symbol>
+      <symbol id="i-arrow-up-right" viewBox="0 0 24 24">
+        <path d="M7 7h10v10" />
+        <path d="M7 17 17 7" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M20 6 9 17l-5-5" />
+      </symbol>
+      <symbol id="i-chevron-left" viewBox="0 0 24 24">
+        <path d="m15 18-6-6 6-6" />
+      </symbol>
+      <symbol id="i-chevron-right" viewBox="0 0 24 24">
+        <path d="m9 18 6-6-6-6" />
+      </symbol>
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2" />
+        <path d="M12 20v2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 17.66 1.41 1.41" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        <path d="m6.34 17.66-1.41 1.41" />
+        <path d="m19.07 4.93-1.41 1.41" />
+      </symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+      </symbol>
+      <symbol id="i-github-mark" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          stroke="none"
+          d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.41-1.27.74-1.56-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.2-3.1-.12-.29-.52-1.46.11-3.05 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.82 0c2.22-1.5 3.2-1.18 3.2-1.18.63 1.59.23 2.76.11 3.05.75.81 1.2 1.84 1.2 3.1 0 4.43-2.7 5.41-5.26 5.69.42.36.8 1.08.8 2.18v3.23c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"
+        />
+      </symbol>
+    </svg>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#top">
+          <img src="brand/icon.svg" alt="" width="36" height="36" />
+          <span>Media Centre</span>
+        </a>
+        <button
+          class="menu-toggle icon-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open the menu"
+          hidden
+        >
+          <svg class="icon" aria-hidden="true"><use href="#i-menu" /></svg>
+        </button>
+        <nav class="site-nav" id="site-nav" aria-label="Sections">
+          <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#screenshots">Screenshots</a></li>
+            <li><a href="#requirements">Requirements</a></li>
+            <li><a href="#quick-start">Quick start</a></li>
+            <li><a href="#docs">Docs</a></li>
+            <li class="nav-cta">
+              <a class="button button-small" href="{{REPO_URL}}">
+                <svg class="icon" aria-hidden="true"><use href="#i-github-mark" /></svg>
+                GitHub
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-backdrop" aria-hidden="true"></div>
+        <div class="container hero-inner">
+          <div class="hero-text">
+            <p class="eyebrow">
+              <svg class="icon" aria-hidden="true"><use href="#i-sparkles" /></svg>
+              Self-hosted · No account · Free and open source
+            </p>
+            <h1 id="hero-title">One remote for <span class="gradient-text">your whole home</span></h1>
+            <p class="lead">
+              Control your TVs, air conditioners, lights, heating, Echo and Ring devices room by room, and play the
+              films, shows and music on your PC or NAS on any TV, from any phone, tablet or computer on your home
+              network.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-large" href="#quick-start">
+                Get started
+                <svg class="icon" aria-hidden="true"><use href="#i-arrow-right" /></svg>
+              </a>
+              <a class="button button-secondary button-large" href="{{REPO_URL}}">
+                <svg class="icon" aria-hidden="true"><use href="#i-github-mark" /></svg>
+                View on GitHub
+              </a>
+            </div>
+            <div class="terminal terminal-mini">
+              <pre
+                tabindex="0"
+                role="region"
+                aria-label="Get Media Centre and start the Hub"
+              ><code><span class="prompt" aria-hidden="true">$ </span>git clone {{REPO_URL}}.git
+<span class="prompt" aria-hidden="true">$ </span>cd {{REPO_NAME}} && pnpm install
+<span class="prompt" aria-hidden="true">$ </span>pnpm start</code></pre>
+            </div>
+          </div>
+          <figure class="hero-shot">
+            <div class="window">
+              <div class="window-bar" aria-hidden="true">
+                <span></span><span></span><span></span>
+                <p class="window-address">localhost:41080</p>
+              </div>
+              <a href="images/screenshots/desktop-tv.png" data-lightbox data-caption="The TV tab, on a computer">
+                <picture>
+                  <source srcset="images/screenshots/desktop-tv-dark.png" media="(prefers-color-scheme: dark)" />
+                  <img
+                    src="images/screenshots/desktop-tv.png"
+                    width="1440"
+                    height="900"
+                    fetchpriority="high"
+                    alt="The Remote's TV tab on a computer: the Selected TV, Living Room · TV, with a film playing and its seek bar, the keys, a D-pad and a number pad, Now Showing, Power, the volume, the TV's apps, and Watch & Listen with a NAS."
+                  />
+                </picture>
+              </a>
+            </div>
+            <picture class="hero-phone">
+              <source srcset="images/screenshots/phone-tv-dark.png" media="(prefers-color-scheme: dark)" />
+              <img src="images/screenshots/phone-tv.png" width="780" height="1688" alt="The same TV tab on a phone." />
+            </picture>
+            <figcaption>
+              <strong>The TV tab.</strong> On a computer and on a phone: the same Remote, from any browser at home.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="container">
+          <ul class="facts" aria-label="At a glance">
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-server" /></svg>
+              <span><strong>Your own Hub</strong> in Docker on a NAS or mini PC, or on a PC</span>
+            </li>
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-shield-check" /></svg>
+              <span><strong>No account</strong> and nothing to sign up for</span>
+            </li>
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-wifi" /></svg>
+              <span><strong>Local first</strong>: TVs, air conditioners and lights over your home network</span>
+            </li>
+            <li>
+              <svg class="icon" aria-hidden="true"><use href="#i-accessibility" /></svg>
+              <span><strong>WCAG 2.2 AA</strong>, light and dark, installable</span>
+            </li>
+          </ul>
+          <div class="providers">
+            <p class="providers-title">Works with</p>
+            <ul class="provider-list">
+              <li>Samsung TVs</li>
+              <li>Midea air conditioners</li>
+              <li>Lepro lights</li>
+              <li>Hive heating</li>
+              <li>Amazon Echo</li>
+              <li>Ring</li>
+              <li>Your PC or NAS</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section" aria-labelledby="about-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="kicker">Why Media Centre</p>
+            <h2 id="about-title">What Media Centre is</h2>
+          </div>
+          <div class="about-grid">
+            <div class="about-text">
+              <p class="about-lead">
+                Every Appliance in the home has its own remote or its own maker's app, each with its own account, and
+                nothing shows the whole home in one place.
+              </p>
+              <p>
+                Media Centre puts them in one app you run yourself, grouped by the Rooms of your home: a tab each for
+                the TVs, air conditioners, lights, heating, the network, Amazon Echos and Ring devices, and the Rooms on
+                your own floor plan. Watching a film from the NAS no longer means the TV's own media browser and its
+                physical remote: choose it on your phone, and the Hub wakes the TV, opens its Player and converts only
+                what the TV can't play.
+              </p>
+              <p>
+                Anyone on your home network can pick it up, as anyone in the room can pick up a remote. It isn't
+                reachable from outside your home.
+              </p>
+            </div>
+            <ul class="pillars">
+              <li>
+                <svg class="icon" aria-hidden="true"><use href="#i-server" /></svg>
+                <h3>The Hub</h3>
+                <p>
+                  The always-on process, in Docker on a NAS or on a PC, that serves the Remote, controls every Appliance
+                  and serves your Media Files.
+                </p>
+              </li>
+              <li>
+                <svg class="icon" aria-hidden="true"><use href="#i-smartphone" /></svg>
+                <h3>The Remote</h3>
+                <p>The web app you use from any phone, tablet or computer on the home network.</p>
+              </li>
+              <li>
+                <svg class="icon" aria-hidden="true"><use href="#i-tv" /></svg>
+                <h3>The Player</h3>
+                <p>The app the Hub installs on each Samsung TV to play your films, shows and music.</p>
+              </li>
+              <li>
+                <svg class="icon" aria-hidden="true"><use href="#i-house" /></svg>
+                <h3>Rooms</h3>
+                <p>Every Appliance and device in its Room, on a floor plan drawn on your own image.</p>
+              </li>
+            </ul>
+          </div>
+
+          <h3 class="pipeline-title">How a film reaches the TV</h3>
+          <ol class="pipeline">
+            <li>
+              <span class="pipeline-number" aria-hidden="true">1</span>
+              <h4>You choose it</h4>
+              <p>In Watch &amp; Listen, from a Media Source: a folder on the Hub's machine, or on a PC or NAS.</p>
+            </li>
+            <li>
+              <span class="pipeline-number" aria-hidden="true">2</span>
+              <h4>The Hub wakes the TV</h4>
+              <p>With Wake-on-LAN if it is off, and waits for it to come on.</p>
+            </li>
+            <li>
+              <span class="pipeline-number" aria-hidden="true">3</span>
+              <h4>It opens the Player</h4>
+              <p>The Player connects back to the Hub, which sends it the Media File.</p>
+            </li>
+            <li>
+              <span class="pipeline-number" aria-hidden="true">4</span>
+              <h4>It picks a Route</h4>
+              <p>
+                It reads the file with ffprobe and takes the cheapest way that the TV can play, converting with ffmpeg
+                only what it can't.
+              </p>
+            </li>
+            <li>
+              <span class="pipeline-number" aria-hidden="true">5</span>
+              <h4>Every Remote follows it</h4>
+              <p>
+                Now Showing shows the position, the audio and subtitle tracks and a frame from the film, and the Hub
+                remembers where you stopped.
+              </p>
+            </li>
+          </ol>
+          <div class="stage-track">
+            <p class="stage-track-title">The four Routes, cheapest first</p>
+            <ol class="stage-chips">
+              <li><span class="chip">Direct Play</span></li>
+              <li><span class="chip">Remux</span></li>
+              <li><span class="chip">Audio Conversion</span></li>
+              <li><span class="chip">Full Conversion</span></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="section section-alt" aria-labelledby="features-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="kicker">Features</p>
+            <h2 id="features-title">Everything in the home, in one Remote</h2>
+            <p class="section-intro">
+              A tab for each kind of Appliance, every one a board of widgets you can move, resize or hide, on each
+              phone, tablet and computer.
+            </p>
+          </div>
+          <ul class="bento">
+            <li class="card card-feature card-wide">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-tv" /></svg
+              ></span>
+              <h3>Samsung TVs</h3>
+              <p>
+                Everything the TV's own remote does, from your phone: Power, the D-pad and keys, a number pad, the
+                coloured and media keys, the volume and mute, typing into the TV's on-screen keyboard, and its apps, to
+                launch or close. TV Menu mode drives the TV's own settings menu, with one-tap shortcuts, and Now Showing
+                says which app is in front.
+              </p>
+            </li>
+            <li class="card card-feature card-wide">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-film" /></svg
+              ></span>
+              <h3>Your films, shows and music on the TV</h3>
+              <p>
+                Browse your PC's or NAS's folders and play on the TV through its own Player: every format ffmpeg can
+                decode, with audio tracks, subtitles (sidecar files too), music with its cover art, a folder played as a
+                Queue with shuffle and repeat, and Resume Positions kept through restarts.
+              </p>
+            </li>
+            <li class="card card-feature">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-air-vent" /></svg
+              ></span>
+              <h3>Midea air conditioners</h3>
+              <p>
+                Power, mode, target temperature, fan speed, swing, Eco, Turbo and Sleep, with the room and outdoor
+                temperatures, controlled on your home network with no cloud once each is added.
+              </p>
+            </li>
+            <li class="card card-feature">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-lightbulb" /></svg
+              ></span>
+              <h3>Lepro lights and Light Scenes</h3>
+              <p>
+                On and off, brightness, white and colour, a Room's Lights at once, and Light Scenes to save and recall,
+                with a film Light Scene for each TV. Built and tested against a fake Lepro Light: not yet tried on a
+                real one.
+              </p>
+            </li>
+            <li class="card card-feature">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-flame" /></svg
+              ></span>
+              <h3>Hive heating and hot water</h3>
+              <p>
+                Each Heating zone and Radiator Valve's target and mode, the Hot Water, a Boost for each, and the Whole
+                home at once, through Hive's cloud. Signing in to Hive is built from the library Home Assistant uses,
+                and not yet tried against Hive itself.
+              </p>
+            </li>
+            <li class="card card-feature">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-speaker" /></svg
+              ></span>
+              <h3>Amazon Echo</h3>
+              <p>
+                What each Echo is playing, its volume and Do Not Disturb, Ask Alexa, Say it and Announce, routines,
+                music, alarms, timers and reminders, through Amazon's cloud.
+              </p>
+            </li>
+            <li class="card card-feature">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-video" /></svg
+              ></span>
+              <h3>Ring doorbells, cameras and chimes</h3>
+              <p>
+                Snapshots, live video, recent events and recordings, the light, siren and motion detection, and a
+                chime's volume and sounds, through Ring's cloud.
+              </p>
+            </li>
+            <li class="card card-feature">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-network" /></svg
+              ></span>
+              <h3>The network and Bluetooth</h3>
+              <p>
+                Every device on your home network, who made it and the ports it is open on, and the Bluetooth devices
+                near the Hub, each to name and put in a Room.
+              </p>
+            </li>
+            <li class="card card-feature card-wide">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-map" /></svg
+              ></span>
+              <h3>Rooms on your own floor plan</h3>
+              <p>
+                Tap a Room on the plan for everything in it: its TVs, air conditioners, lights and heating, its Echos
+                and Ring devices, and the other devices on the network. Draw the plan, floor by floor, on your own image
+                of your home.
+              </p>
+            </li>
+            <li class="card card-feature card-wide">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-accessibility" /></svg
+              ></span>
+              <h3>For everyone in the house</h3>
+              <p>
+                It meets WCAG 2.2 at Level AA, works by keyboard and screen reader, follows your device's light or dark
+                mode, has six colour themes, and installs to a phone's home screen.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="screenshots" class="section" aria-labelledby="screenshots-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="kicker">Screenshots</p>
+            <h2 id="screenshots-title">See every tab</h2>
+            <p class="section-intro">
+              On a computer, a tablet and a phone, taken by the project's own tooling with demo Rooms and its fake
+              Appliances, not a real home. Select a picture to see it full size.
+            </p>
+          </div>
+
+          <div class="device-tabs" data-tabs data-tabs-label="Device">
+            <section class="tab-panel" id="shots-desktop" aria-labelledby="shots-desktop-title">
+              <h3 id="shots-desktop-title">Computer</h3>
+              <div class="gallery gallery-desktop">
+                <figure>
+                  <a href="images/screenshots/desktop-tv.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-tv.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The TV tab: a film playing with its seek bar, the keys, D-pad and number pad, Now Showing, Power, the volume, the TV's apps and Watch & Listen."
+                    />
+                  </a>
+                  <figcaption>
+                    <strong>TV.</strong> Keys, volume, apps, Now Showing and Watch &amp; Listen.
+                    <a
+                      class="variant-link"
+                      href="images/screenshots/desktop-tv-dark.png"
+                      data-dark-alt="The TV tab in dark mode: a film playing with its seek bar, the keys, D-pad and number pad, Now Showing, Power, the volume, the TV's apps and Watch & Listen."
+                      >See it in dark mode</a
+                    >
+                  </figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-aircon.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-aircon.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The Aircon tab: two air conditioners, each with its room and outdoor temperatures, Power, mode, a target temperature slider, fan speed, swing and presets."
+                    />
+                  </a>
+                  <figcaption><strong>Aircon.</strong> Mode, temperature, fan, swing and presets.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-lights.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-lights.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The Lights tab: the Living Room's Lights at once with a brightness slider, its Light Scenes, and a floor lamp with Power, brightness, white or colour, and hue."
+                    />
+                  </a>
+                  <figcaption>
+                    <strong>Lights.</strong> A Room's Lights at once, each Light, and Light Scenes.
+                    <a
+                      class="variant-link"
+                      href="images/screenshots/desktop-lights-dark.png"
+                      data-dark-alt="The Lights tab in dark mode: the Living Room's Lights at once with a brightness slider, its Light Scenes, and a floor lamp with Power, brightness, white or colour, and hue."
+                      >See it in dark mode</a
+                    >
+                  </figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-heating.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-heating.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The Heating tab: the Whole home, two Heating zones with the temperature each reads, each with a target temperature, a Schedule, Manual or Off mode and Boost, and the Hot Water."
+                    />
+                  </a>
+                  <figcaption><strong>Heating.</strong> Each zone, the Whole home and the Hot Water.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-network.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-network.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The Network tab's home network: devices the Hub found, each with its address, Room, maker, MAC address and open ports."
+                    />
+                  </a>
+                  <figcaption>
+                    <strong>Network.</strong> Every device on the home network, and its open ports.
+                  </figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-network-bluetooth.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-network-bluetooth.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The Network tab's Bluetooth view: the Bluetooth devices near the Hub, as each advertises itself."
+                    />
+                  </a>
+                  <figcaption><strong>Bluetooth.</strong> The devices near the Hub's PC.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-amazon.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-amazon.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The Amazon tab: Announce to every Echo, and two Echos, each with its Room, what it is playing, volume, Do Not Disturb, and Ask Alexa, Say it and Announce."
+                    />
+                  </a>
+                  <figcaption><strong>Amazon.</strong> Every Echo on your account.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-ring.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-ring.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The Ring tab: a video doorbell and a floodlight camera, each with Watch live, New snapshot, recent events and motion detection, and a chime with its volume and sounds."
+                    />
+                  </a>
+                  <figcaption><strong>Ring.</strong> Doorbells, cameras and chimes.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-rooms.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-rooms.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="The Rooms tab: a floor plan of a two-storey house, upstairs and downstairs side by side, with the Living Room picked out."
+                    />
+                  </a>
+                  <figcaption>
+                    <strong>Rooms.</strong> Your floor plan, a Room at a time.
+                    <a
+                      class="variant-link"
+                      href="images/screenshots/desktop-rooms-dark.png"
+                      data-dark-alt="The Rooms tab in dark mode: a floor plan of a two-storey house, upstairs and downstairs side by side, with the Living Room picked out."
+                      >See it in dark mode</a
+                    >
+                  </figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-rooms-devices.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-rooms-devices.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="A Room's widgets under the floor plan: its Appliances, its Echo and Ring devices, and the other devices put in it."
+                    />
+                  </a>
+                  <figcaption><strong>A Room.</strong> Everything in it, Appliances and devices.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-network-room.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-network-room.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="A device's Room picker on the Network tab, making a new Room to put it in."
+                    />
+                  </a>
+                  <figcaption><strong>Putting a device in a Room.</strong> Or making a new one.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/desktop-settings.png" data-lightbox>
+                    <img
+                      src="images/screenshots/desktop-settings.png"
+                      width="1440"
+                      height="900"
+                      loading="lazy"
+                      alt="Settings: Appearance, with System, Light or Dark and six themes, Evergreen, Ocean, Violet, Sunset, Rose and Graphite, and the Hub's version and IP address."
+                    />
+                  </a>
+                  <figcaption>
+                    <strong>Settings.</strong> Appearance, the Hub, Rooms and each kind of Appliance.
+                  </figcaption>
+                </figure>
+              </div>
+            </section>
+
+            <section class="tab-panel" id="shots-tablet" aria-labelledby="shots-tablet-title">
+              <h3 id="shots-tablet-title">Tablet</h3>
+              <div class="gallery gallery-tablet">
+                <figure>
+                  <a href="images/screenshots/tablet-tv.png" data-lightbox>
+                    <img
+                      src="images/screenshots/tablet-tv.png"
+                      width="820"
+                      height="1180"
+                      loading="lazy"
+                      alt="The TV tab on a tablet, its widgets two across."
+                    />
+                  </a>
+                  <figcaption><strong>TV.</strong> The widgets, two across.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/tablet-lights.png" data-lightbox>
+                    <img
+                      src="images/screenshots/tablet-lights.png"
+                      width="820"
+                      height="1180"
+                      loading="lazy"
+                      alt="The Lights tab on a tablet."
+                    />
+                  </a>
+                  <figcaption><strong>Lights.</strong> Each Room's Lights and Light Scenes.</figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/tablet-rooms.png" data-lightbox>
+                    <img
+                      src="images/screenshots/tablet-rooms.png"
+                      width="820"
+                      height="1180"
+                      loading="lazy"
+                      alt="The Rooms tab on a tablet, the floor plan's floors one above the other."
+                    />
+                  </a>
+                  <figcaption>
+                    <strong>Rooms.</strong> The floor plan.
+                    <a
+                      class="variant-link"
+                      href="images/screenshots/tablet-rooms-dark.png"
+                      data-dark-alt="The Rooms tab on a tablet in dark mode, the floor plan's floors one above the other."
+                      >See it in dark mode</a
+                    >
+                  </figcaption>
+                </figure>
+              </div>
+            </section>
+
+            <section class="tab-panel" id="shots-phone" aria-labelledby="shots-phone-title">
+              <h3 id="shots-phone-title">Phone</h3>
+              <div class="gallery gallery-phone">
+                <figure>
+                  <a href="images/screenshots/phone-tv.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-tv.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="The TV tab on a phone, with the tabs along the bottom."
+                    />
+                  </a>
+                  <figcaption>
+                    <strong>TV.</strong>
+                    <a
+                      class="variant-link"
+                      href="images/screenshots/phone-tv-dark.png"
+                      data-dark-alt="The TV tab on a phone in dark mode, with the tabs along the bottom."
+                      >See it in dark mode</a
+                    >
+                  </figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/phone-aircon.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-aircon.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="The Aircon tab on a phone."
+                    />
+                  </a>
+                  <figcaption><strong>Aircon.</strong></figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/phone-lights.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-lights.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="The Lights tab on a phone."
+                    />
+                  </a>
+                  <figcaption>
+                    <strong>Lights.</strong>
+                    <a
+                      class="variant-link"
+                      href="images/screenshots/phone-lights-dark.png"
+                      data-dark-alt="The Lights tab on a phone in dark mode."
+                      >See it in dark mode</a
+                    >
+                  </figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/phone-heating.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-heating.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="The Heating tab on a phone."
+                    />
+                  </a>
+                  <figcaption><strong>Heating.</strong></figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/phone-network.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-network.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="The Network tab on a phone."
+                    />
+                  </a>
+                  <figcaption><strong>Network.</strong></figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/phone-amazon.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-amazon.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="The Amazon tab on a phone."
+                    />
+                  </a>
+                  <figcaption><strong>Amazon.</strong></figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/phone-ring.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-ring.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="The Ring tab on a phone."
+                    />
+                  </a>
+                  <figcaption><strong>Ring.</strong></figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/phone-rooms.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-rooms.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="The Rooms tab on a phone, the floor plan's floors one above the other."
+                    />
+                  </a>
+                  <figcaption><strong>Rooms.</strong></figcaption>
+                </figure>
+                <figure>
+                  <a href="images/screenshots/phone-settings.png" data-lightbox>
+                    <img
+                      src="images/screenshots/phone-settings.png"
+                      width="780"
+                      height="1688"
+                      loading="lazy"
+                      alt="Settings on a phone."
+                    />
+                  </a>
+                  <figcaption><strong>Settings.</strong></figcaption>
+                </figure>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="requirements" class="section section-alt" aria-labelledby="requirements-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="kicker">Before you start</p>
+            <h2 id="requirements-title">Requirements</h2>
+            <p class="section-intro">
+              One always-on machine for the Hub, on the same network as your TVs, and the Appliances you have. Each kind
+              of Appliance is optional.
+            </p>
+          </div>
+          <ul class="requirements">
+            <li class="card">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-container" /></svg
+              ></span>
+              <p>
+                <strong>Docker with host networking</strong> on a NAS or mini PC running Linux: the Hub's image has
+                Node, ffmpeg and ffprobe built in. Docker Desktop on Windows or macOS can't put it on your home network,
+                so there use <code>pnpm start</code>.
+              </p>
+            </li>
+            <li class="card">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-terminal" /></svg
+              ></span>
+              <p>
+                <strong>Or, on a PC: Node 26 or later and pnpm 12</strong>, with ffmpeg and ffprobe (built with libx264)
+                on the <code>PATH</code>, and Git.
+              </p>
+            </li>
+            <li class="card">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-wifi" /></svg
+              ></span>
+              <p>
+                <strong>The same subnet as your TVs.</strong> Finding TVs, switching one on with Wake-on-LAN and reading
+                its volume don't cross a router, so not a separate VLAN or guest Wi-Fi.
+              </p>
+            </li>
+            <li class="card">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-cpu" /></svg
+              ></span>
+              <p>
+                <strong>An x86 (Intel or AMD) machine, ideally.</strong> Samsung's tools that install the Player are
+                made for amd64 only: on an ARM NAS, install the Player from a PC with Tizen Studio instead. An Intel
+                mini PC's GPU can do Full Conversion, too.
+              </p>
+            </li>
+            <li class="card">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-tv" /></svg
+              ></span>
+              <p>
+                <strong>Samsung smart TVs.</strong> The Player runs on 2018 and later models, installed in Developer
+                Mode with a Samsung signing certificate, made with Tizen Studio.
+              </p>
+            </li>
+            <li class="card">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-hard-drive" /></svg
+              ></span>
+              <p>
+                <strong>Your films, shows and music</strong> in folders the Hub can read: on its own machine, or mounted
+                from a PC or NAS.
+              </p>
+            </li>
+            <li class="card">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-house" /></svg
+              ></span>
+              <p>
+                <strong>For the other tabs:</strong> Midea air conditioners (a v3 unit asks for your MSmartHome login
+                once), Lepro lights, and Hive, Amazon or Ring accounts, which need the internet.
+              </p>
+            </li>
+            <li class="card">
+              <span class="card-icon"
+                ><svg class="icon" aria-hidden="true"><use href="#i-smartphone" /></svg
+              ></span>
+              <p>
+                <strong>Any phone, tablet or computer</strong> with a browser, on your home network, for the Remote.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="quick-start" class="section" aria-labelledby="quick-start-title">
+        <div class="container narrow">
+          <div class="section-head">
+            <p class="kicker">Five minutes</p>
+            <h2 id="quick-start-title">Quick start</h2>
+            <p class="section-intro">
+              Start the Hub, then open the Remote in a browser at port 41080. Choose where the Hub runs.
+            </p>
+          </div>
+
+          <div class="os-tabs terminal" data-tabs data-tabs-label="Where the Hub runs">
+            <section class="tab-panel os-panel" id="quick-docker" aria-labelledby="quick-docker-title">
+              <h3 id="quick-docker-title">Docker on a NAS</h3>
+              <p>
+                On a Linux NAS or mini PC with Docker, on the same subnet as your TVs. Mount each folder of films, shows
+                or music, read-only, and add it in Settings by its path inside the container.
+              </p>
+              <pre tabindex="0"><code>git clone {{REPO_URL}}.git
+cd {{REPO_NAME}}
+docker build -t media-centre-hub .
+docker run -d --name media-centre-hub --network host \
+  -v media-centre-data:/data \
+  -v /volume1/video:/media/video:ro \
+  --restart unless-stopped media-centre-hub</code></pre>
+              <p class="os-after">Then open <code>http://&lt;the NAS's address&gt;:41080</code> on your phone.</p>
+            </section>
+
+            <section class="tab-panel os-panel" id="quick-pc" aria-labelledby="quick-pc-title">
+              <h3 id="quick-pc-title">A PC</h3>
+              <p>
+                With Node 26 or later, pnpm 12, and ffmpeg and ffprobe on the <code>PATH</code>. Any folder the Hub can
+                read can be a Media Source.
+              </p>
+              <pre tabindex="0"><code>git clone {{REPO_URL}}.git
+cd {{REPO_NAME}}
+pnpm install
+pnpm start   <span class="comment"># builds the Remote and starts the Hub</span></code></pre>
+              <p class="os-after">Then open <a href="http://localhost:41080">http://localhost:41080</a>.</p>
+            </section>
+          </div>
+
+          <div class="callout-grid">
+            <div class="callout">
+              <h3>
+                <svg class="icon" aria-hidden="true"><use href="#i-house" /></svg>
+                Set up your home
+              </h3>
+              <p>
+                In Settings, add your Rooms, then "Find TVs" and allow the Remote on each TV, add your Media Sources,
+                and find your air conditioners and lights. Sign in to Hive in Settings, and to Amazon and Ring on their
+                tabs.
+              </p>
+            </div>
+            <div class="callout">
+              <h3>
+                <svg class="icon" aria-hidden="true"><use href="#i-tv" /></svg>
+                Install the Player
+              </h3>
+              <p>
+                Put the TV in Developer Mode with the Hub's address, give Settings your Samsung signing certificate,
+                then choose "Install / update Player" in the TV's Developer section.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="docs" class="section section-alt" aria-labelledby="docs-title">
+        <div class="container">
+          <div class="section-head">
+            <p class="kicker">Go deeper</p>
+            <h2 id="docs-title">Documentation</h2>
+            <p class="section-intro">The guides are in the repository on GitHub.</p>
+          </div>
+          <ul class="doc-links">
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/getting-started.md">
+                <span class="doc-title">Getting started</span>
+                <span class="doc-text"
+                  >What you need, running the Hub on a PC or a NAS, its settings and the network.</span
+                >
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/setup/running-the-hub-in-docker.md">
+                <span class="doc-title">Running the Hub in Docker</span>
+                <span class="doc-text"
+                  >Host networking, the volume, Media Sources and shares, a GPU, and upgrading.</span
+                >
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/player-and-playback.md">
+                <span class="doc-title">The Player and playback</span>
+                <span class="doc-text"
+                  >Installing the Player, Routes, subtitles, music, Queues and Resume Positions.</span
+                >
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a
+                class="doc-card"
+                href="{{REPO_URL}}/blob/main/docs/processes/installing-the-player-with-tizen-studio.md"
+              >
+                <span class="doc-title">Installing the Player with Tizen Studio</span>
+                <span class="doc-text">Making the signing certificate, and installing the Player by hand.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/air-conditioners.md">
+                <span class="doc-title">Air Conditioners</span>
+                <span class="doc-text">The Midea Driver, adding units in Settings, and the Aircon tab.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/lights.md">
+                <span class="doc-title">Lights</span>
+                <span class="doc-text">The Lepro Driver, adding Lights, Light Scenes and a TV's film Light Scene.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/heating.md">
+                <span class="doc-title">Heating</span>
+                <span class="doc-text">The Hive Driver, signing in to Hive, and the Heating tab.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/rooms-and-floor-plan.md">
+                <span class="doc-title">Rooms and the floor plan</span>
+                <span class="doc-text">The Rooms tab, naming places, and drawing the plan on your own image.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/network.md">
+                <span class="doc-title">The Network tab</span>
+                <span class="doc-text">Every device on the network and Bluetooth, its maker, ports and name.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/amazon.md">
+                <span class="doc-title">The Amazon tab</span>
+                <span class="doc-text">Signing in to Amazon, and everything each Echo can do.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/ring.md">
+                <span class="doc-title">The Ring tab</span>
+                <span class="doc-text">Signing in to Ring, snapshots, live video, events and recordings.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+            <li>
+              <a class="doc-card" href="{{REPO_URL}}/blob/main/docs/guides/versions-and-releases.md">
+                <span class="doc-title">Versions and releases</span>
+                <span class="doc-text">Update notices, the Changelog and how releases are made.</span>
+                <svg class="icon doc-arrow" aria-hidden="true"><use href="#i-arrow-up-right" /></svg>
+              </a>
+            </li>
+          </ul>
+          <p class="doc-more">
+            Also the <a href="{{REPO_URL}}#readme">README</a>, the
+            <a href="{{REPO_URL}}/blob/main/GLOSSARY.md">glossary</a>, the
+            <a href="{{REPO_URL}}/blob/main/docs/product-requirements-document/media-centre.md">requirements</a>, the
+            <a href="{{REPO_URL}}/tree/main/docs/architectural-decision-record">decision records</a> and the
+            <a href="{{REPO_URL}}/blob/main/CHANGELOG.md">changelog</a>.
+          </p>
+        </div>
+      </section>
+
+      <section id="licence" class="section section-compact" aria-labelledby="licence-title">
+        <div class="container narrow licence">
+          <span class="card-icon"
+            ><svg class="icon" aria-hidden="true"><use href="#i-scale" /></svg
+          ></span>
+          <div>
+            <h2 id="licence-title">Licence</h2>
+            <p>
+              Media Centre is free and open source under the
+              <a href="https://opensource.org/license/isc-license-txt">ISC licence</a>, as its
+              <a href="{{REPO_URL}}/blob/main/package.json"><code>package.json</code></a> declares: use it, change it
+              and share it, keeping the copyright notice. It comes with no warranty.
+            </p>
+            <p>
+              Its typeface, Plus Jakarta Sans, is under the SIL Open Font Licence, as is this website's copy of it.
+              Samsung, Midea, Lepro, Hive, Amazon, Echo, Alexa and Ring are their owners' trademarks; Media Centre isn't
+              made or endorsed by any of them.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" aria-labelledby="cta-title">
+        <div class="container">
+          <div class="cta-inner">
+            <img class="cta-icon" src="brand/icon.svg" alt="" width="64" height="64" loading="lazy" />
+            <h2 id="cta-title">Get Media Centre</h2>
+            <p>The code, the issues and every guide are on GitHub.</p>
+            <div class="cta-actions">
+              <a class="button button-inverse button-large" href="{{REPO_URL}}">
+                <svg class="icon" aria-hidden="true"><use href="#i-github-mark" /></svg>
+                View on GitHub
+              </a>
+              <a class="button button-ghost-inverse button-large" href="#quick-start">Quick start</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- The policies. Without JavaScript they are read here, at the
+           footer's links; script.js moves each into a dialog the footer's
+           buttons open, as the Remote's footer does. -->
+      <div class="policies" id="policies">
+        <section
+          class="policy container narrow"
+          id="privacy-policy"
+          aria-labelledby="privacy-policy-title"
+          data-close-label="Close the privacy policy"
+        >
+          <h2 id="privacy-policy-title">Privacy Policy</h2>
+          <div class="policy-body">
+            <p class="policy-updated">First edition, effective 26 October 2026.</p>
+
+            <h3>This website</h3>
+            <p>
+              This policy is about this website, {{SITE_URL}}/, a single static page about Media Centre, published from
+              Media Centre's repository and hosted by GitHub Pages. It has no sign-in, no forms and no comments, and
+              asks you for nothing.
+            </p>
+
+            <h3>What this website collects</h3>
+            <p>
+              Nothing. There is no analytics, no tracking and no advertising. The page sets no cookies and keeps nothing
+              in your browser's storage, and everything it shows (its text, font, icons and screenshots) comes from this
+              site itself, so viewing it sends nothing to anyone else.
+            </p>
+
+            <h3>Who else sees your visit</h3>
+            <ul>
+              <li>
+                <strong>GitHub</strong> hosts this website. Like any web host, it receives each visitor's IP address and
+                the request their browser makes, and may keep them in its logs for security and to keep the service
+                running, as the
+                <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+                  >GitHub General Privacy Statement</a
+                >
+                sets out.
+              </li>
+              <li>
+                <strong>Links</strong> to GitHub and other sites leave this website: what those sites collect is in
+                their own privacy policies.
+              </li>
+            </ul>
+
+            <h3>The Media Centre app</h3>
+            <p>
+              The app runs on your own Hub, at home, so what it holds stays with whoever runs it. The Remote has its own
+              privacy policy, in its footer, which lists every service outside the home it can talk to, when, and what
+              it sends.
+            </p>
+
+            <h3>Your rights</h3>
+            <p>
+              This website holds nothing about you. For what GitHub holds, see its privacy statement; for a question
+              about this page, <a href="{{REPO_URL}}/issues">open an issue on GitHub</a>.
+            </p>
+
+            <h3>Changes</h3>
+            <p>This policy may change with the website; the date above says when it last did.</p>
+          </div>
+        </section>
+
+        <section
+          class="policy container narrow"
+          id="terms-and-conditions"
+          aria-labelledby="terms-and-conditions-title"
+          data-close-label="Close the terms and conditions"
+        >
+          <h2 id="terms-and-conditions-title">Terms and Conditions</h2>
+          <div class="policy-body">
+            <p class="policy-updated">First edition, effective 26 October 2026.</p>
+
+            <h3>Using this website</h3>
+            <p>
+              This website gives information about Media Centre: what it is, what it needs and how to start it. By using
+              it, you agree to these terms, and to GitHub's own terms for the GitHub Pages it is hosted on.
+            </p>
+
+            <h3>The software</h3>
+            <p>
+              Media Centre is licensed under the ISC licence, as the Licence section above says. The app has its own
+              terms, in the Remote's footer, which apply when you run it.
+            </p>
+
+            <h3>Your Appliances and accounts</h3>
+            <p>
+              The setup this page describes connects your own TVs and Appliances, and, if you choose, your Midea, Hive,
+              Amazon and Ring accounts, whose own terms still apply. Amazon's and Ring's terms may not allow their apps'
+              services to be used this way: it is your account, and your decision.
+            </p>
+
+            <h3>Names and trademarks</h3>
+            <p>
+              Samsung, Midea, Lepro, Hive, Amazon, Echo, Alexa, Ring and the other products named here belong to their
+              owners, and are named only to say what Media Centre works with.
+            </p>
+
+            <h3>No warranty</h3>
+            <p>
+              This website and its instructions are provided as they are, without warranty of any kind. Its authors are
+              not liable for any loss arising from their use, to the extent the law allows.
+            </p>
+
+            <h3>Law</h3>
+            <p>
+              These terms are governed by the law of England and Wales, whose courts settle any dispute about them. If
+              you live elsewhere in the United Kingdom or the European Union, you also keep the protection of your own
+              country's mandatory laws.
+            </p>
+
+            <h3>Changes and contact</h3>
+            <p>
+              These terms may change with the website; the date above says when they last did. For a question,
+              <a href="{{REPO_URL}}/issues">open an issue on GitHub</a>.
+            </p>
+          </div>
+        </section>
+
+        <section
+          class="policy container narrow"
+          id="cookie-policy"
+          aria-labelledby="cookie-policy-title"
+          data-close-label="Close the cookie policy"
+        >
+          <h2 id="cookie-policy-title">Cookie Policy</h2>
+          <div class="policy-body">
+            <p class="policy-updated">First edition, effective 26 October 2026.</p>
+
+            <h3>No cookies</h3>
+            <p>
+              This website sets no cookies, and keeps nothing in your browser's local storage, session storage or any
+              other storage. There is nothing to accept, and no banner asks you to.
+            </p>
+
+            <h3>What is stored</h3>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Cookies and browser storage, scrollable">
+              <table>
+                <caption>
+                  Cookies and browser storage this website uses
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Purpose</th>
+                    <th scope="col">How long</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="4">None</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>The Media Centre app</h3>
+            <p>
+              The Remote you run at home sets no cookies either, and remembers its settings, such as its theme and
+              widget layouts, in your browser; its own cookie policy, in its footer, lists each.
+            </p>
+
+            <h3>Other sites</h3>
+            <p>
+              Links to GitHub and to other sites leave this website, and those sites may set cookies of their own under
+              their own policies.
+            </p>
+          </div>
+        </section>
+
+        <section
+          class="policy container narrow"
+          id="accessibility"
+          aria-labelledby="accessibility-title"
+          data-close-label="Close the accessibility statement"
+        >
+          <h2 id="accessibility-title">Accessibility</h2>
+          <div class="policy-body">
+            <p class="policy-updated">First edition, effective 26 October 2026.</p>
+
+            <div class="status-box">
+              <svg class="icon" aria-hidden="true"><use href="#i-shield-check" /></svg>
+              <p>
+                <strong>Conformance status:</strong> this website is built to meet the Web Content Accessibility
+                Guidelines (WCAG) 2.2 at <strong>Level AA</strong>.
+              </p>
+            </div>
+
+            <h3>What we have done</h3>
+            <ul>
+              <li>
+                <strong>Keyboard access</strong>: every link, button, tab and dialog works with a keyboard alone, with a
+                clear focus outline the sticky header never hides. A "Skip to content" link leads the page.
+              </li>
+              <li>
+                <strong>Screen readers</strong>: one main heading, headings in order and labelled landmarks; every
+                control has a name, every screenshot a description, and copying a command is announced.
+              </li>
+              <li>
+                <strong>Colour and contrast</strong>: text has at least 4.5:1 contrast with its background, and
+                controls, icons and focus outlines at least 3:1, in light and dark mode, which follow your device.
+                Windows Contrast Themes are respected.
+              </li>
+              <li>
+                <strong>Motion</strong>: transitions are short, and smooth scrolling and animation are switched off when
+                your device asks for reduced motion.
+              </li>
+              <li>
+                <strong>Zoom and reflow</strong>: the page reflows down to 320 pixels wide and at 400% zoom without
+                scrolling sideways.
+              </li>
+              <li>
+                <strong>Target sizes</strong>: every control is at least 24 by 24 pixels, and buttons at least 44 pixels
+                tall on touch screens.
+              </li>
+              <li>
+                <strong>Dialogs</strong>: the screenshot viewer and these policies move focus in, keep it there, close
+                on Escape and hand focus back to whatever opened them.
+              </li>
+              <li>
+                <strong>Without JavaScript</strong>: every part of the page, these policies included, can still be read
+                and reached.
+              </li>
+            </ul>
+
+            <h3>Known limitations</h3>
+            <ul>
+              <li>
+                Long commands scroll sideways inside their own frame on narrow screens; the frame takes focus, so the
+                arrow keys scroll it.
+              </li>
+              <li>
+                The screenshots are pictures of the app; their descriptions say what each shows, not every word in it.
+                The app itself is the accessible version.
+              </li>
+            </ul>
+
+            <h3>The Media Centre app</h3>
+            <p>The Remote has its own accessibility statement, in its footer.</p>
+
+            <h3>Feedback</h3>
+            <p>
+              If something is hard to use, please <a href="{{REPO_URL}}/issues">open an issue on GitHub</a> saying what
+              you were trying to do, and with which browser and assistive technology.
+            </p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <img src="brand/icon.svg" alt="" width="40" height="40" loading="lazy" />
+          <p>
+            <strong>Media Centre</strong><br />
+            One remote for your whole home.
+          </p>
+        </div>
+        <nav class="footer-nav" aria-label="This page">
+          <h2 class="footer-heading">On this page</h2>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#screenshots">Screenshots</a></li>
+            <li><a href="#requirements">Requirements</a></li>
+            <li><a href="#quick-start">Quick start</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-nav" aria-label="The project">
+          <h2 class="footer-heading">The project</h2>
+          <ul>
+            <li><a href="{{REPO_URL}}">GitHub</a></li>
+            <li><a href="{{REPO_URL}}/issues">Issues</a></li>
+            <li><a href="{{REPO_URL}}/blob/main/CHANGELOG.md">Changelog</a></li>
+            <li><a href="{{REPO_URL}}/blob/main/GLOSSARY.md">Glossary</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bar">
+        <nav class="container" aria-label="Policies">
+          <ul class="footer-legal">
+            <li>
+              <a class="footer-link footer-credit" href="{{REPO_URL}}/tree/main/site">
+                <svg class="icon" aria-hidden="true"><use href="#i-github-mark" /></svg>
+                Website source
+              </a>
+            </li>
+            <li>
+              <a class="footer-link" href="#privacy-policy" data-policy="privacy-policy">Privacy Policy</a>
+            </li>
+            <li>
+              <a class="footer-link" href="#terms-and-conditions" data-policy="terms-and-conditions"
+                >Terms and Conditions</a
+              >
+            </li>
+            <li>
+              <a class="footer-link" href="#cookie-policy" data-policy="cookie-policy">Cookie Policy</a>
+            </li>
+            <li>
+              <a class="footer-link" href="#accessibility" data-policy="accessibility">Accessibility</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+
+    <p class="visually-hidden" role="status" id="announcer"></p>
+  </body>
+</html>

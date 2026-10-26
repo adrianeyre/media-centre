@@ -1,0 +1,11 @@
+{
+  // Type-checks the website: build.ts, which runs in Node, and script.mts,
+  // which runs in the browser (`tsc -p site`). One project for both, so that
+  // ESLint's type-aware rules find them without the root tsconfig.json.
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["es2024", "dom", "dom.iterable"],
+    "types": ["node"]
+  },
+  "include": ["build.ts", "script.mts"]
+}

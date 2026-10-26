@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1B2740" />
+      <stop offset="1" stop-color="#080D19" />
+    </linearGradient>
+  </defs>
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .edge { stroke: #334155; }
+    }
+  </style>
+  <rect class="edge" x="0.5" y="0.5" width="31" height="31" rx="7" fill="url(#tile)" stroke="none" />
+  <g fill="none" stroke="#F1F5F9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="6.5" width="22" height="15" rx="2.5" />
+    <path d="M11 26h10" />
+  </g>
+  <path d="M13.5 10.5v7l6-3.5z" fill="#4ADE80" stroke="#4ADE80" stroke-width="1.5" stroke-linejoin="round" />
+</svg>

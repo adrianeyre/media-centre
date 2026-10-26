@@ -1,0 +1,30 @@
+{
+  "name": "@media-centre/hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The always-on process that serves the Remote, controls every Appliance and serves Media Files to the Player.",
+  "type": "module",
+  "exports": {
+    ".": "./src/hub.ts"
+  },
+  "scripts": {
+    "start": "node src/main.ts",
+    "fake-tv": "node src/fakes/samsung-tv/main.ts",
+    "fake-aircon": "node src/fakes/midea-aircon/main.ts",
+    "fake-midea-cloud": "node src/fakes/midea-cloud/main.ts",
+    "fake-light": "node src/fakes/lepro-light/main.ts",
+    "fake-hive-cloud": "node src/fakes/hive-cloud/main.ts",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@media-centre/shared": "workspace:*",
+    "alexa-remote2": "^8.1.1",
+    "oui-data": "^2.1.46",
+    "ring-client-api": "^14.3.0",
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "@media-centre/player": "workspace:*",
+    "@types/ws": "^8.18.2"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "media-centre",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One home-network app to control your TVs, air conditioners and lights by room, and to play media from your PC or NAS on your TVs.",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrianeyre/media-centre.git"
+  },
+  "type": "module",
+  "scripts": {
+    "sandcastle": "tsx .sandcastle/main.ts",
+    "sandcastle:ca": "tsx .sandcastle/export-ca.ts",
+    "build": "pnpm --recursive build",
+    "start": "pnpm build && pnpm --filter @media-centre/hub start",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --project tsconfig.json && tsc --project site/tsconfig.json && pnpm --recursive typecheck",
+    "test": "vitest run",
+    "test:e2e": "pnpm build && playwright test",
+    "screenshots": "bash scripts/screenshots/run-in-docker.sh",
+    "site:build": "node site/build.ts"
+  },
+  "engines": {
+    "node": ">=26",
+    "pnpm": ">=12"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=26",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.14.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.14.0",
+  "devDependencies": {
+    "@ai-hero/sandcastle": "^0.12.0",
+    "@axe-core/playwright": "^4.14.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.64.1",
+    "@semantic-release/changelog": "7.0.0",
+    "@semantic-release/exec": "7.1.0",
+    "@semantic-release/git": "11.0.1",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "semantic-release": "25.0.9",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
+  }
+}

@@ -1,0 +1,13 @@
+[
+  {
+    "ecmaVersion": "es2017",
+    "files": "dist/**/*.js",
+    "checkFeatures": true
+  },
+  {
+    "ecmaVersion": "checkBrowser",
+    "browserslistQuery": "chrome 56",
+    "files": "dist/**/*.js",
+    "checkFeatures": true
+  }
+]

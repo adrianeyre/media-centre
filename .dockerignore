@@ -1,0 +1,27 @@
+# Only what the Hub's Dockerfile copies. Everything else stays out of the build
+# context: dependencies and builds made on the host, the Hub's own state in
+# data/, the Sandcastle harness, the docs and the tests.
+*
+
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!tsconfig.base.json
+!CHANGELOG.md
+!packages/*/package.json
+!packages/hub/src
+!packages/shared/src
+!packages/remote/index.html
+!packages/remote/tsconfig.json
+!packages/remote/vite.config.ts
+!packages/remote/src
+!packages/player/.escheckrc
+!packages/player/public
+!packages/player/src
+!packages/player/tsconfig.json
+!packages/player/vite.config.ts
+
+**/*.test.ts
+**/*.test.tsx
+packages/*/src/testing
+packages/hub/src/fakes

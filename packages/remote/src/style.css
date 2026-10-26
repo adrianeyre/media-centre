@@ -1,0 +1,4811 @@
+/*
+ * The Remote's look. Every colour is a token below, in six themes, each
+ * light and dark. Text is at least 4.5:1 against what it sits on, and focus
+ * outlines, field borders and icons at least 3:1 (WCAG 2.2 AA).
+ *
+ * Light or dark follows the device, unless this Remote is set to one or the
+ * other (data-mode, from the cog in the app bar). Every colour is given for
+ * both with light-dark(), which takes whichever the color-scheme is.
+ *
+ * One typeface, Plus Jakarta Sans (SIL Open Font Licence), built into the
+ * Remote and served by the Hub, so it looks the same on every device and
+ * still needs nothing from the internet (NFR-3).
+ */
+@import "@fontsource-variable/plus-jakarta-sans/wght.css";
+
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+}
+
+:root[data-mode="dark"] {
+  color-scheme: dark;
+}
+
+:root {
+  /* The neutrals every theme shares. */
+  --bg-base: light-dark(#f6f8fb, #080d19);
+  --surface: light-dark(#ffffff, #101828);
+  --surface-2-base: light-dark(#eef2f7, #18233a);
+  --surface-3: light-dark(#dfe6ef, #243150);
+  --border: light-dark(#dde4ee, #24304a);
+  --border-strong: light-dark(#64748b, #7383a3);
+  --text: light-dark(#0f172a, #f1f5f9);
+  --text-muted: light-dark(#475569, #a3b1c6);
+  --danger: light-dark(#b91c1c, #fca5a5);
+  --danger-soft: light-dark(#fee2e2, #3b1418);
+  --warning: light-dark(#a16207, #fcd34d);
+  --focus: light-dark(#1d4ed8, #93c5fd);
+  --scrim: light-dark(rgb(15 23 42 / 0.55), rgb(2 6 23 / 0.7));
+  --shadow-near: light-dark(rgb(15 23 42 / 0.06), rgb(0 0 0 / 0.3));
+  --shadow-far: light-dark(rgb(15 23 42 / 0.12), rgb(0 0 0 / 0.45));
+  --shadow-lift: light-dark(rgb(15 23 42 / 0.28), rgb(0 0 0 / 0.6));
+  --shadow: 0 1px 2px var(--shadow-near), 0 6px 20px -8px var(--shadow-far);
+  --shadow-lg: 0 2px 6px var(--shadow-near), 0 28px 64px -12px var(--shadow-lift);
+  /* The edge a key's face casts beneath it, so it reads as something to press. */
+  --key-edge: light-dark(#c9d2df, #0b1222);
+
+  /* The theme's background is tinted a touch towards its accent. */
+  --bg: color-mix(in oklab, var(--accent) 4%, var(--bg-base));
+  --surface-2: color-mix(in oklab, var(--accent) 5%, var(--surface-2-base));
+
+  --radius-sm: 0.625rem;
+  --radius: 0.875rem;
+  --radius-lg: 1.25rem;
+  --control-h: 2.75rem;
+  --key-h: 3rem;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --pad-width: 26rem;
+  /* Until the dock is measured: the tab bar. */
+  --dock-height: 3.75rem;
+  /* Until the footer is measured: one line. */
+  --footer-height: 2rem;
+  /* The tabs' rail, down the left of a wide screen: narrow enough that a 1280px screen still has the widgets' widest grid. */
+  --rail-width: 13rem;
+  /* Until the app bar is measured. */
+  --app-bar-height: 3.25rem;
+
+  font-family:
+    "Plus Jakarta Sans Variable",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  line-height: 1.5;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/*
+ * The themes: each an accent, the accent's soft tint, and the text that goes
+ * on the accent, light and dark. On any element, so that Appearance can show
+ * each theme in its own colours. The accent is at least 4.5:1 against the
+ * surfaces and its soft tint, as is the text on it.
+ */
+:root,
+[data-theme="evergreen"] {
+  --accent: light-dark(#15803d, #4ade80);
+  --accent-soft: light-dark(#dcfce7, #12331f);
+  --on-accent: light-dark(#ffffff, #052e16);
+}
+
+[data-theme="ocean"] {
+  --accent: light-dark(#0369a1, #38bdf8);
+  --accent-soft: light-dark(#e0f2fe, #0c2d48);
+  --on-accent: light-dark(#ffffff, #082f49);
+}
+
+[data-theme="violet"] {
+  --accent: light-dark(#6d28d9, #a78bfa);
+  --accent-soft: light-dark(#ede9fe, #2a1f4d);
+  --on-accent: light-dark(#ffffff, #2e1065);
+}
+
+[data-theme="sunset"] {
+  --accent: light-dark(#c2410c, #fb923c);
+  --accent-soft: light-dark(#ffedd5, #3b200f);
+  --on-accent: light-dark(#ffffff, #431407);
+}
+
+[data-theme="rose"] {
+  --accent: light-dark(#be185d, #f472b6);
+  --accent-soft: light-dark(#fce7f3, #3d1229);
+  --on-accent: light-dark(#ffffff, #500724);
+}
+
+[data-theme="graphite"] {
+  --accent: light-dark(#334155, #cbd5e1);
+  --accent-soft: light-dark(#e2e8f0, #1e293b);
+  --on-accent: light-dark(#ffffff, #0f172a);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Whatever is scrolled to, e.g. by Tab, is kept clear of the app bar, the dock and the footer (WCAG 2.4.11). */
+html {
+  scroll-padding-top: calc(var(--app-bar-height) + 1rem);
+  scroll-padding-bottom: calc(var(--dock-height) + var(--footer-height) + 1rem);
+}
+
+/* The page stays put behind an open dialog. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.625rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+h3 {
+  font-size: 1rem;
+}
+
+a {
+  color: var(--focus);
+  text-underline-offset: 0.15em;
+}
+
+code {
+  font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.875em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Where the skip link lands: not a control, so no outline round the whole page. */
+#main:focus {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.icon {
+  flex: none;
+  vertical-align: -0.2em;
+}
+
+/* ---------- Buttons and fields ---------- */
+
+button,
+a.button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--control-h);
+  padding: 0 1rem;
+  border: 1px solid var(--border);
+  border-bottom-color: var(--key-edge);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 150ms var(--ease-out),
+    border-color 150ms var(--ease-out),
+    box-shadow 150ms var(--ease-out),
+    transform 100ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  button:hover:not(:disabled) {
+    background: var(--surface-3);
+  }
+}
+
+button:active:not(:disabled) {
+  background: var(--surface-3);
+  transform: translateY(1px) scale(0.98);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+button[type="submit"],
+.button-primary,
+a.button-primary,
+.empty button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow:
+    0 1px 2px var(--shadow-near),
+    0 4px 12px -4px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+@media (hover: hover) {
+  button[type="submit"]:hover:not(:disabled),
+  .button-primary:hover:not(:disabled),
+  .empty button:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 88%, var(--text));
+  }
+}
+
+button[type="submit"]:active:not(:disabled),
+.button-primary:active:not(:disabled),
+.empty button:active:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 80%, var(--text));
+}
+
+/* A link that opens a page elsewhere, drawn as the button it is used as. */
+a.button-primary {
+  text-decoration: none;
+}
+
+.button-danger {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.button-icon {
+  width: var(--control-h);
+  padding: 0;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="file"],
+select {
+  min-height: var(--control-h);
+  padding: 0 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  /* 16px or more, so a phone doesn't zoom in on the field. */
+  font-size: max(1rem, 16px);
+  transition:
+    border-color 150ms var(--ease-out),
+    box-shadow 150ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  :is(input[type="text"], input[type="email"], input[type="password"], input[type="search"], select):hover {
+    border-color: var(--text-muted);
+  }
+}
+
+:is(input[type="text"], input[type="email"], input[type="password"], input[type="search"], select):focus-visible {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--focus) 18%, transparent);
+}
+
+/*
+ * A file field is as wide as its button and file name make it, wider than a
+ * phone, unless it takes its width from what it is in.
+ */
+input[type="file"] {
+  width: 100%;
+  min-width: 0;
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+/* Its "Choose file" button, drawn as the Remote's own buttons are. */
+input[type="file"]::file-selector-button {
+  min-height: calc(var(--control-h) - 0.5rem - 2px);
+  margin-right: 0.75rem;
+  padding: 0 0.875rem;
+  border: 1px solid var(--accent);
+  border-radius: calc(var(--radius-sm) - 0.125rem);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  input[type="file"]:hover::file-selector-button {
+    background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+  }
+}
+
+input[type="file"]:active::file-selector-button {
+  background: color-mix(in srgb, var(--accent) 24%, var(--surface));
+}
+
+input[type="text"]::placeholder,
+input[type="search"]::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+input[aria-invalid="true"] {
+  border: 2px solid var(--danger);
+}
+
+/* ---------- The page ---------- */
+
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* Clear of the dock and the footer at its end, so that nothing on the page is ever under them. */
+.remote {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-bottom: calc(var(--dock-height) + var(--footer-height));
+}
+
+/* Kept at the top as the page scrolls, over it, as the dock is at the bottom. */
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.5rem;
+  padding: max(0.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.5rem
+    max(1rem, env(safe-area-inset-left));
+  border-bottom: 1px solid var(--border);
+  /* Opaque, so nothing scrolled beneath shows through, and its text keeps its contrast. */
+  background: var(--surface);
+}
+
+.app-bar-end {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-bar-cog {
+  border-color: transparent;
+  background: none;
+  color: var(--text-muted);
+}
+
+.app-bar-cog .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* The app's own icon in small: its tile, light on dark in every theme, as on a home screen. */
+.brand .icon {
+  box-sizing: content-box;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0.375rem;
+  border-radius: 0.625rem;
+  background: linear-gradient(180deg, #1b2740, #080d19);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.08),
+    0 1px 2px var(--shadow-near);
+  color: #f1f5f9;
+}
+
+.hub-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+
+.hub-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--warning);
+}
+
+/* Online, its dot glows softly in the accent. */
+.hub-chip-connected .hub-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.hub-chip-unreachable {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.hub-chip-unreachable .hub-dot {
+  background: var(--danger);
+}
+
+.banner {
+  margin: 0.75rem 1rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-weight: 600;
+  text-align: center;
+}
+
+/*
+ * The screen uses the width it has, with a slim margin either side, up to
+ * that of a large monitor, beyond which widgets would only stretch.
+ */
+.screen {
+  flex: 1;
+  width: 100%;
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 1rem max(0.75rem, env(safe-area-inset-right)) 1.5rem max(0.75rem, env(safe-area-inset-left));
+}
+
+@media (min-width: 40rem) {
+  .screen {
+    padding: 1.25rem max(1.25rem, env(safe-area-inset-right)) 2rem max(1.25rem, env(safe-area-inset-left));
+  }
+}
+
+/* Sections stand on cards, so a long screen reads as its parts. */
+.tv-now-showing,
+.tv-keyboard,
+.tv-apps,
+.tv-developer,
+.watch-and-listen,
+.tv-list,
+#screen > section,
+.settings-panel > section {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+#screen > section.empty {
+  max-width: 36rem;
+}
+
+/* ---------- The dock: tab bar, or rail, and footer ---------- */
+
+/* Along the bottom, just above the footer, where a thumb reaches it on a phone (NFR-2). */
+.dock {
+  position: fixed;
+  inset: auto 0 var(--footer-height);
+  z-index: 2;
+  padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
+  border-top: 1px solid var(--border);
+  /* Opaque, so nothing scrolled beneath shows through, and its text keeps its contrast. */
+  background: var(--surface);
+}
+
+.tab-bar {
+  display: flex;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+/* Eight across a phone: each as narrow as its name needs, none pushed off the edge. */
+.tab-bar button {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0.375rem 0.125rem 0.25rem;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-height: 3.75rem;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* The icon sits on a pill, filled in the accent's tint on the open tab. */
+.tab-bar button .icon {
+  box-sizing: content-box;
+  width: 1.375rem;
+  height: 1.375rem;
+  padding: 0.25rem 0.875rem;
+  border-radius: 999px;
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+/* On the narrowest phones, a name too long for its share of the bar ends in an ellipsis rather than spilling. */
+.tab-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 26rem) {
+  .tab-bar button {
+    padding-inline: 0;
+    font-size: 0.6875rem;
+    letter-spacing: -0.01em;
+  }
+
+  .tab-bar button .icon {
+    padding-inline: 0.5rem;
+  }
+}
+
+@media (max-width: 22.5rem) {
+  .tab-bar button {
+    font-size: 0.625rem;
+    letter-spacing: -0.02em;
+  }
+
+  .tab-bar button .icon {
+    padding-inline: 0.25rem;
+  }
+}
+
+.tab-bar button[aria-selected="true"] {
+  color: var(--accent);
+  font-weight: 750;
+}
+
+.tab-bar button[aria-selected="true"] .icon {
+  background: var(--accent-soft);
+}
+
+/* The open tab is marked by shape too, not by colour alone: a bar along its edge, at 3:1 or more. */
+.tab-bar button[aria-selected="true"]::before {
+  position: absolute;
+  inset: 0 30% auto;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: currentColor;
+  content: "";
+}
+
+@media (hover: hover) {
+  .tab-bar button:hover:not(:disabled) {
+    background: none;
+    color: var(--text);
+  }
+
+  .tab-bar button:hover:not(:disabled) .icon {
+    background: var(--surface-2);
+  }
+
+  .tab-bar button[aria-selected="true"]:hover {
+    color: var(--accent);
+  }
+
+  .tab-bar button[aria-selected="true"]:hover .icon {
+    background: var(--accent-soft);
+  }
+}
+
+.tab-bar button:active:not(:disabled) {
+  background: none;
+  transform: none;
+}
+
+.tab-bar button:focus-visible {
+  outline-offset: -3px;
+}
+
+/*
+ * On a wide screen, the tabs stand in a rail down the left, under the app
+ * bar, and the screen takes the rest of the width.
+ */
+@media (min-width: 64rem) and (min-height: 30.01rem) {
+  html {
+    scroll-padding-bottom: calc(var(--footer-height) + 1rem);
+  }
+
+  .remote {
+    padding-bottom: var(--footer-height);
+  }
+
+  .dock {
+    inset: var(--app-bar-height) auto var(--footer-height) 0;
+    width: calc(var(--rail-width) + env(safe-area-inset-left));
+    padding: 1rem 0.75rem 1rem max(0.75rem, env(safe-area-inset-left));
+    overflow-y: auto;
+    border-top: 0;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .tab-bar {
+    flex-direction: column;
+    gap: 0.25rem;
+    max-width: none;
+  }
+
+  .tab-bar button {
+    flex: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    padding: 0 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.9375rem;
+  }
+
+  .tab-bar button .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    background: none;
+  }
+
+  .tab-bar button[aria-selected="true"],
+  .tab-bar button[aria-selected="true"]:hover {
+    background: var(--accent-soft);
+  }
+
+  .tab-bar button[aria-selected="true"] .icon,
+  .tab-bar button[aria-selected="true"]:hover .icon {
+    background: none;
+  }
+
+  .tab-bar button[aria-selected="true"]::before {
+    inset: 0.625rem auto 0.625rem 0;
+    width: 3px;
+    height: auto;
+    border-radius: 0 3px 3px 0;
+  }
+
+  @media (hover: hover) {
+    .tab-bar button:hover:not(:disabled):not([aria-selected="true"]) {
+      background: var(--surface-2);
+    }
+
+    .tab-bar button:hover:not(:disabled) .icon {
+      background: none;
+    }
+  }
+
+  .tab-bar button:focus-visible {
+    outline-offset: 0;
+  }
+
+  /* Both margins set: an auto one would shrink the screen, and its widgets, to their content. */
+  .screen {
+    width: auto;
+    max-width: none;
+    margin-right: 0;
+    margin-left: calc(var(--rail-width) + env(safe-area-inset-left));
+    padding: 1.5rem max(1.5rem, env(safe-area-inset-right)) 2rem 1.5rem;
+  }
+
+  .banner {
+    margin: 1rem 1.5rem 0 calc(var(--rail-width) + 1.5rem);
+  }
+}
+
+/* One slim line along the very bottom of every screen, under everything else: who made it, its version and its policies. */
+.footer-dock {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 2;
+  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.app-footer {
+  padding: 0.25rem 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.app-footer ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 1.25rem;
+  margin: 0;
+  padding: 0 0.75rem;
+  list-style: none;
+}
+
+/* Laid out as text, not flex items, so a title's hidden end keeps its own space. */
+.footer-link,
+.footer-version {
+  display: inline-block;
+  /* The 24 × 24 CSS pixels WCAG 2.5.8 asks of a target, and no taller, to keep the line slim. */
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  line-height: 1.5rem;
+  text-align: center;
+}
+
+.footer-link {
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer-link .icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.375rem;
+  vertical-align: -0.1875rem;
+}
+
+@media (hover: hover) {
+  .footer-link:hover:not(:disabled) {
+    background: none;
+    color: var(--text);
+    text-decoration: underline;
+  }
+}
+
+.footer-link:active:not(:disabled) {
+  background: none;
+  transform: none;
+}
+
+.footer-link:focus-visible {
+  outline-offset: 0;
+}
+
+.footer-version {
+  font-variant-numeric: tabular-nums;
+}
+
+/* On a phone, the footer keeps to one line: each link shows its first words, and a screen reader still reads them all. */
+@media (max-width: 40rem) {
+  .app-footer ul {
+    gap: 0 0.875rem;
+  }
+
+  .footer-link .icon {
+    margin-right: 0;
+  }
+
+  .footer-long {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/*
+ * On a short screen, such as a phone on its side or a page zoomed to 400%,
+ * the dock and the footer give way to the page and sit at its end (WCAG 1.4.10).
+ */
+@media (max-height: 30rem) {
+  html {
+    scroll-padding-bottom: 0;
+  }
+
+  .dock,
+  .footer-dock {
+    position: static;
+  }
+
+  .remote {
+    padding-bottom: 0;
+  }
+}
+
+/* ---------- Dialogs ---------- */
+
+.dialog {
+  width: min(40rem, 100% - 2rem);
+  max-width: none;
+  max-height: min(85dvh, 50rem);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+}
+
+/* A drawing beside its controls: as wide as the screen allows, and as tall. */
+.dialog-wide {
+  width: min(78rem, 100% - 2rem);
+  max-height: min(94dvh, 70rem);
+}
+
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+  animation: dialog-in 200ms var(--ease-out);
+}
+
+.dialog::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Header and footer stay put; only the body between them scrolls. */
+.dialog-head,
+.dialog-foot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+  background: var(--surface);
+}
+
+.dialog-head {
+  border-bottom: 1px solid var(--border);
+}
+
+.dialog-head h2 {
+  flex: 1;
+  margin: 0;
+  font-size: 1.1875rem;
+}
+
+.dialog-close {
+  border-color: transparent;
+  background: none;
+}
+
+.dialog-body {
+  flex: 1;
+  min-height: 0;
+  /* Down, or across where something is too wide for the screen. */
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 1rem 1.25rem 1.5rem;
+  line-height: 1.6;
+}
+
+.dialog-body:focus-visible {
+  outline-offset: -3px;
+}
+
+.dialog-body h3 {
+  margin: 1.5rem 0 0.5rem;
+}
+
+.dialog-body p {
+  margin: 0.5rem 0 0;
+}
+
+.dialog-body ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.dialog-body li + li {
+  margin-top: 0.5rem;
+}
+
+.dialog-foot {
+  justify-content: flex-end;
+  padding: 0.75rem 1.25rem max(0.75rem, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+}
+
+.dialog-foot button {
+  min-width: 6rem;
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
+}
+
+.changelog h3 {
+  font-variant-numeric: tabular-nums;
+}
+
+.changelog h4 {
+  margin: 1rem 0 0.25rem;
+}
+
+.policy-updated {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.dialog-body .policy-updated {
+  margin: 0;
+}
+
+.status-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.status-box .icon {
+  margin-top: 0.125rem;
+  color: var(--accent);
+}
+
+.dialog-body .status-box p {
+  margin: 0;
+}
+
+/* Wider than a phone, so it scrolls across on its own. */
+.table-scroll {
+  margin-top: 0.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.table-scroll table {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table-scroll caption {
+  padding: 0.5rem 0.75rem;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+.table-scroll th,
+.table-scroll td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table-scroll thead {
+  background: var(--surface-2);
+}
+
+.table-scroll tbody tr + tr {
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- Settings ---------- */
+
+.rooms {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.room-row,
+.room-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+}
+
+.rooms li + li {
+  border-top: 1px solid var(--border);
+}
+
+.room-name,
+.found-name {
+  flex: 1;
+  min-width: 8rem;
+  overflow-wrap: anywhere;
+}
+
+.room-form label {
+  display: flex;
+  flex: 1 1 100%;
+  flex-direction: column;
+  gap: 0.375rem;
+  font-weight: 550;
+}
+
+.room-row button {
+  min-width: var(--control-h);
+}
+
+.problem {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--danger);
+  font-weight: 550;
+}
+
+.room-group h3,
+.form-heading {
+  margin: 1rem 0 0;
+  font-size: 1rem;
+}
+
+.room-group h3 {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.form-heading,
+.form-help {
+  flex-basis: 100%;
+}
+
+.form-help,
+.appliance-details {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.appliance-details {
+  padding-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.room-form .found,
+.found-none {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.found-added {
+  color: var(--text-muted);
+}
+
+.waiting {
+  flex-basis: 100%;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ---------- TV tab ---------- */
+
+/* At the top of every TV screen, one tap from choosing another TV (FR-15). */
+.tv-picker {
+  position: relative;
+  /* Its choices open over the now-playing bar, which stays in sight beneath it. */
+  z-index: 2;
+  max-width: var(--pad-width);
+  margin-bottom: 0.75rem;
+}
+
+.tv-picker-toggle {
+  justify-content: space-between;
+  width: 100%;
+  min-height: var(--key-h);
+  border-color: var(--border-strong);
+  background: var(--surface);
+  font-weight: 400;
+  text-align: start;
+}
+
+.tv-picker-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tv-picker-choices {
+  position: absolute;
+  inset: calc(100% + 0.25rem) 0 auto;
+  z-index: 1;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.tv-picker-choices button {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 3rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-weight: 400;
+  text-align: start;
+}
+
+/* The Selected TV, ticked off by weight and a bar, not colour alone. */
+.tv-picker-choices button[aria-pressed="true"] {
+  box-shadow: inset 3px 0 0 var(--accent);
+  background: var(--accent-soft);
+  font-weight: 700;
+}
+
+.rooms li.tv {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: var(--control-h);
+  padding: 0.5rem 0;
+}
+
+.rooms li.tv.selected .room-name {
+  font-weight: 700;
+}
+
+.selected-mark,
+.power {
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.selected-mark {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.power-on {
+  border: 1px solid var(--accent);
+  color: var(--text);
+}
+
+.power-standby,
+.power-unknown {
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.power-unreachable {
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+/*
+ * The Selected TV's Now Showing card (FR-26), above Power, as wide as the key
+ * pad: the app in front, with its icon, or why it can't be told.
+ */
+.tv-now-showing,
+.tv-keyboard,
+.tv-power,
+.tv-volume,
+.menu-mode-open,
+.tv-keys,
+.tv-apps {
+  max-width: var(--pad-width);
+}
+
+.tv-now-showing h2 {
+  margin: 0 0 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tv-now-showing .problem {
+  margin: 0 0 0.5rem;
+}
+
+.now-showing-app {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 650;
+}
+
+/*
+ * What the Player in front plays (FR-27): its preview picture, a frame of the
+ * Media File, as wide as the card, letterboxed to 16:9 whatever its shape,
+ * then its name, position and the tracks in use.
+ */
+.now-showing-player {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.75rem 0 0;
+}
+
+.now-showing-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 0.25rem;
+  border-radius: var(--radius);
+  background: #000;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}
+
+/* An audio Media File's cover art, square, as embedded in it, or a placeholder where it has none. */
+.now-showing-cover-art {
+  display: block;
+  width: min(100%, 12rem);
+  height: auto;
+  margin: 0 0 0.25rem;
+  border-radius: var(--radius);
+  background: #000;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.now-showing-cover-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: var(--text-muted);
+  background: var(--surface-2);
+}
+
+.now-showing-media-file {
+  overflow: hidden;
+  margin: 0;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.now-showing-position {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.now-showing-tracks {
+  display: grid;
+  gap: 0.125rem;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.now-showing-tracks > div {
+  display: flex;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.now-showing-tracks dt {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.now-showing-tracks dd {
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.now-showing-note,
+.power-status,
+.keyboard-note,
+.volume-note,
+.apps-note,
+.apps-status {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* The Selected TV's Power button (FR-17), above its keys, as on the TV's own remote, beside TV Menu mode's. */
+/*
+ * The now-playing bar (FR-36): on every TV screen while the Selected TV's
+ * Player plays, kept in sight at the top as the TV tab scrolls, where the
+ * screen is tall enough to spare it.
+ */
+.now-playing {
+  max-width: var(--pad-width);
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.tv-menu-mode .now-playing {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.now-playing-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.now-playing-header h2 {
+  flex: none;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.now-playing-name {
+  overflow: hidden;
+  margin: 0;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.now-playing .problem {
+  margin: 0.5rem 0 0;
+}
+
+.now-playing-seek {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.now-playing-time {
+  min-width: 3.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.now-playing-duration {
+  text-align: right;
+}
+
+.now-playing-slider {
+  flex: 1;
+  min-width: 0;
+  height: var(--control-h);
+  margin: 0;
+  accent-color: var(--accent);
+  touch-action: none;
+}
+
+.now-playing-slider:disabled {
+  opacity: 0.5;
+}
+
+.now-playing-controls {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.375rem;
+}
+
+.now-playing-controls button {
+  gap: 0.125rem;
+  min-width: 0;
+  min-height: var(--key-h);
+  padding: 0 0.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.now-playing .now-playing-play {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* A Queue's controls (FR-48), beneath the playback controls: previous, next and shuffle, then repeat on a row of its own. */
+.now-playing-queue-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 0.375rem;
+  margin-top: 0.375rem;
+}
+
+.now-playing-queue-controls button {
+  gap: 0.25rem;
+  min-width: 0;
+  min-height: var(--key-h);
+  padding: 0 0.25rem;
+}
+
+.now-playing .now-playing-shuffle[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.now-playing-repeat {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.now-playing-repeat select {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+}
+
+/* The Queue itself, in the order it plays, the current Media File marked; a long one scrolls within the bar. */
+.now-playing-queue h3 {
+  margin: 0.75rem 0 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.now-playing-queue-place {
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+
+.now-playing-queue ol {
+  overflow-y: auto;
+  max-height: 8.5rem;
+  margin: 0;
+  padding-left: 2rem;
+  font-size: 0.875rem;
+}
+
+.now-playing-queue li {
+  overflow: hidden;
+  padding: 0.125rem 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.now-playing-queue .now-playing-queue-current {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* The Media File's audio and subtitle tracks, beneath the controls, each list as wide as the bar allows. */
+.now-playing-audio,
+.now-playing-subtitles {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.now-playing-audio select,
+.now-playing-subtitles select {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+}
+
+.tv-quick {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  max-width: var(--pad-width);
+  margin: 0 0 1rem;
+}
+
+.tv-power {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  max-width: 50%;
+}
+
+.tv-power .power-status:not(:empty) {
+  margin-top: 0.25rem;
+}
+
+.tv-power .key-power {
+  min-width: 7.5rem;
+  min-height: var(--key-h);
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-weight: 700;
+  user-select: none;
+}
+
+@media (hover: hover) {
+  .tv-power .key-power:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--danger) 18%, var(--surface));
+  }
+}
+
+.tv-power .key-power:active:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 26%, var(--surface));
+}
+
+/* The text field for the Selected TV's on-screen keyboard (FR-20), while it is open. */
+.tv-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-color: var(--accent);
+}
+
+.tv-keyboard label {
+  font-weight: 650;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.keyboard-row input {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--key-h);
+}
+
+.keyboard-row button {
+  min-width: 5rem;
+  min-height: var(--key-h);
+}
+
+/*
+ * The Selected TV's volume (FR-19): a slider as wide as the key pad, with
+ * volume down and up either side of it, and mute beneath. While the TV can't
+ * say its volume, the slider shows no thumb, so it shows no value (FR-25).
+ */
+.tv-volume {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0 0 1rem;
+}
+
+.volume-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.key {
+  min-width: 0;
+  min-height: var(--key-h);
+  padding: 0 0.25rem;
+  font-variant-emoji: text;
+  user-select: none;
+}
+
+.tv-volume .key {
+  min-width: var(--key-h);
+}
+
+.tv-volume .key-mute {
+  min-width: 6rem;
+  margin-left: auto;
+}
+
+/* On, by its icon and outline as well as its colour. */
+.tv-volume .key-mute[aria-pressed="true"] {
+  border: 2px solid var(--text);
+  background: var(--surface-3);
+  font-weight: 700;
+}
+
+.volume-slider {
+  flex: 1;
+  min-width: 0;
+  height: var(--key-h);
+  margin: 0;
+  accent-color: var(--accent);
+  touch-action: none;
+}
+
+.volume-slider:disabled {
+  opacity: 0.5;
+}
+
+/* A plain, unfilled track: a browser's own would fill it to a midpoint the TV never said. */
+.volume-unknown {
+  appearance: none;
+  background: linear-gradient(
+    transparent calc(50% - 0.125rem),
+    var(--border-strong) calc(50% - 0.125rem) calc(50% + 0.125rem),
+    transparent calc(50% + 0.125rem)
+  );
+}
+
+.volume-unknown::-webkit-slider-thumb {
+  visibility: hidden;
+}
+
+.volume-unknown::-moz-range-thumb {
+  visibility: hidden;
+}
+
+.volume-level {
+  min-width: 2.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * The Selected TV's keys (FR-18), sized for a thumb on a phone (NFR-2): no
+ * key is smaller than 3rem, and the D-pad's are bigger still. A tap is sent
+ * at once, never held back to see whether it is a double tap.
+ */
+.tv-keys {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.menu-keys,
+.media-keys,
+.colour-keys,
+.number-keys {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.menu-keys {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.d-pad {
+  display: grid;
+  grid-template-areas:
+    ". up ."
+    "left ok right"
+    ". down .";
+  grid-template-columns: repeat(3, 4.5rem);
+  grid-auto-rows: 4.5rem;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.d-pad .key,
+.media-keys .key {
+  font-size: 1.25rem;
+}
+
+.d-pad .key-up {
+  grid-area: up;
+}
+
+.d-pad .key-left {
+  grid-area: left;
+}
+
+.d-pad .key-ok {
+  grid-area: ok;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: var(--accent-soft);
+  font-weight: 700;
+}
+
+.d-pad .key-right {
+  grid-area: right;
+}
+
+.d-pad .key-down {
+  grid-area: down;
+}
+
+.media-keys {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.colour-keys {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* As on the TV's own remote, a bar of each colour. */
+.colour-keys .key {
+  border-bottom-width: 0.5rem;
+}
+
+.colour-keys .key-red {
+  border-bottom-color: #d32f2f;
+}
+
+.colour-keys .key-green {
+  border-bottom-color: #388e3c;
+}
+
+.colour-keys .key-yellow {
+  border-bottom-color: #fbc02d;
+}
+
+.colour-keys .key-blue {
+  border-bottom-color: #1976d2;
+}
+
+/* The digits fill three columns, 0 under 8, beside channel up and down. */
+.number-keys {
+  grid-template-columns: repeat(3, 1fr) 1.25fr;
+}
+
+.number-keys .key {
+  font-size: 1.125rem;
+}
+
+.number-keys .key-0 {
+  grid-area: 4 / 2;
+}
+
+.number-keys .key-channel-up {
+  grid-area: 1 / 4 / span 2;
+}
+
+.number-keys .key-channel-down {
+  grid-area: 3 / 4 / span 2;
+}
+
+.number-keys .key-channel-up,
+.number-keys .key-channel-down {
+  flex-direction: column;
+  gap: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+/* The way into TV Menu mode, above the key pad, as wide as it. */
+.menu-mode-open {
+  flex: 1;
+  min-height: var(--key-h);
+  font-weight: 650;
+}
+
+/*
+ * TV Menu mode (FR-23): the whole screen, for driving the TV's own menu
+ * while watching the TV. The D-pad is bigger than the key pad's, and takes
+ * whatever height the rest leaves; the shortcuts (FR-24) are two to a row
+ * beneath it, where a thumb reaches them. Nothing here shows a setting's
+ * value (FR-25).
+ */
+.tv-menu-mode {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: max(0.75rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  overflow-y: auto;
+  border: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.tv-menu-mode[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.menu-mode-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: var(--pad-width);
+  margin: 0 auto;
+}
+
+.menu-mode-header div {
+  flex: 1;
+  min-width: 0;
+}
+
+.menu-mode-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.menu-mode-tv {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.menu-mode-status {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/*
+ * A status that has nothing to say takes no room, but stays on the page: a
+ * screen reader only announces what changes in one it already knows of
+ * (WCAG 4.1.3).
+ */
+.menu-mode-status:empty,
+.apps-status:empty {
+  margin: 0;
+}
+
+.tv-menu-mode .problem {
+  margin: 0;
+}
+
+.tv-menu-mode button {
+  min-height: var(--key-h);
+  padding: 0 0.5rem;
+}
+
+.menu-mode-close {
+  min-width: 6rem;
+}
+
+.menu-mode-keys,
+.menu-mode-shortcuts {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: var(--pad-width);
+  margin: 0 auto;
+}
+
+.menu-mode-keys {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.menu-mode-shortcuts {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.menu-mode-d-pad {
+  flex: 1;
+  grid-template-columns: repeat(3, 6rem);
+  grid-auto-rows: 6rem;
+  align-content: center;
+}
+
+.menu-mode-d-pad .key {
+  font-size: 1.75rem;
+}
+
+/* The Selected TV's apps (FR-21): one row each, tapped to launch, with Close at its end. */
+.apps-note,
+.apps-status {
+  margin: 0 0 0.5rem;
+}
+
+.apps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.app button {
+  min-height: 3.5rem;
+}
+
+.app-launch {
+  flex: 1;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.app-close {
+  min-width: 4.5rem;
+  padding: 0 0.75rem;
+}
+
+.app-icon {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+/* An app the TV gives no icon for has its first letter instead. */
+.app-icon-none {
+  display: grid;
+  place-items: center;
+  background: var(--surface-3);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.app-icon-none::before {
+  content: attr(data-letter);
+}
+
+.app-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * The Developer section (FR-28, FR-29), closed until opened: it is for
+ * setting a TV up, not for watching it.
+ */
+.tv-developer {
+  max-width: var(--pad-width);
+}
+
+.tv-developer h2 {
+  margin: 0;
+}
+
+.developer-toggle {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: start;
+}
+
+.developer-toggle-mark {
+  float: inline-end;
+}
+
+.tv-developer h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.device-info {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0;
+}
+
+.device-info dt {
+  color: var(--text-muted);
+}
+
+.device-info dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.developer-note {
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.developer-steps li + li {
+  margin-top: 0.5rem;
+}
+
+.hub-ip {
+  font-family: ui-monospace, monospace;
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--focus);
+  font: inherit;
+  text-decoration: underline;
+}
+
+.hub-address-note {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* The Player's buttons in the Developer section (FR-31). */
+.player-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+/* A Media Source in Settings: its name, with its folder below. */
+.media-source-name,
+.media-source-path {
+  display: block;
+}
+
+.media-source-path {
+  font-family: ui-monospace, monospace;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/*
+ * Watch & Listen (FR-33), below the apps, as wide as the key pad: the folder
+ * shown, with the way back up above it, then one row for each folder and
+ * Media File in it.
+ */
+.watch-and-listen {
+  max-width: var(--pad-width);
+}
+
+.media-note {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.media-note button {
+  min-height: 2.75rem;
+  font: inherit;
+}
+
+/* "Play folder" (FR-46), above the folder's list, for a folder with audio Media Files in it. */
+.media-play-folder {
+  gap: 0.375rem;
+  min-height: 2.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.media-path ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.media-path li + li::before {
+  content: "›";
+  margin: 0 0.25rem;
+  opacity: 0.5;
+}
+
+.media-path button {
+  min-height: 2.75rem;
+  padding: 0 0.25rem;
+  border: 0;
+  background: none;
+  color: var(--focus);
+  font: inherit;
+  text-decoration: underline;
+}
+
+.media-path [aria-current] {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.media-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.media-folder,
+.media-file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+.media-folder {
+  background: var(--surface-2);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.media-folder::before {
+  content: "📁";
+}
+
+.media-folder:active {
+  background: color-mix(in srgb, CanvasText 20%, Canvas);
+}
+
+/* With no alternative text, so that a screen reader names a Media File by its name. */
+.media-video::before {
+  content: "🎬" / "";
+}
+
+.media-audio::before {
+  content: "🎵" / "";
+}
+
+.media-file-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.media-file-details {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/* How the Media File reaches the Selected TV, its Route (FR-34). */
+.media-file-route {
+  font-weight: 550;
+}
+
+/* Full Conversion, flagged on a line of its own, as it uses a lot of the Hub's CPU (FR-34). */
+.media-file-route-full-conversion,
+.media-file-cpu {
+  color: var(--warning);
+}
+
+.media-file-cpu {
+  flex-basis: 100%;
+  font-size: 0.875rem;
+  font-weight: 550;
+}
+
+.media-file-cpu::before {
+  content: "⚠ " / "";
+}
+
+/* A Media File that plays on the Selected TV when it is tapped (FR-35). */
+button.media-file {
+  background: var(--surface);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.media-file:active {
+  background: color-mix(in srgb, CanvasText 20%, Canvas);
+}
+
+/* Each step of playing the Media File chosen, as the Hub takes it. */
+.play-progress {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.play-progress h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.play-steps {
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.play-step {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.play-step::before {
+  inline-size: 1.25rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.play-step-done::before {
+  content: "✓";
+  color: var(--accent);
+}
+
+.play-step-current {
+  font-weight: 600;
+}
+
+.play-step-current::before {
+  content: "…";
+  color: var(--focus);
+}
+
+.play-step-failed::before {
+  content: "✕";
+  color: var(--danger);
+}
+
+.play-step-to-do {
+  color: var(--text-muted);
+}
+
+.play-step-to-do::before {
+  content: "○";
+}
+
+.play-now {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+}
+
+.play-progress .problem {
+  margin: 0 0 0.5rem;
+}
+
+.play-dismiss {
+  min-height: var(--control-h);
+  font: inherit;
+}
+
+/* ---------- Aircon tab ---------- */
+
+/* Each Air Conditioner is a widget of its own, whose frame draws it as a card. */
+.aircon {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.aircon-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+}
+
+/* Its name is the widget's title, as every widget's is. */
+.aircon-head h2 {
+  flex: 1 1 100%;
+  overflow-wrap: anywhere;
+}
+
+/* Wide enough for "Heat, set to 21.5°" on one line, the temperatures going beneath it where there isn't room. */
+.aircon-summary {
+  flex: 1 1 12rem;
+  margin: 0;
+  color: var(--text-muted);
+  font-weight: 550;
+}
+
+/* Said in words and marked by colour and weight, never by colour alone. */
+.aircon-not-answering {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.aircon-temperatures {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+}
+
+.aircon-temperatures div {
+  display: flex;
+  gap: 0.375rem;
+  align-items: baseline;
+}
+
+.aircon-temperatures dt {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.aircon-temperatures dd {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.aircon-fetch-again {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.aircon-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.aircon-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.aircon-field legend,
+.aircon-label {
+  display: block;
+  margin-bottom: 0.375rem;
+  padding: 0;
+  font-weight: 650;
+}
+
+/* As many choices in a row as fit, where Appearance has three. */
+.aircon-segmented {
+  grid-template-columns: repeat(auto-fit, minmax(4.25rem, 1fr));
+}
+
+.segment:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.segment input:disabled {
+  cursor: not-allowed;
+}
+
+.aircon-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.aircon-power {
+  align-self: flex-start;
+  min-width: 8rem;
+}
+
+/* On, by its tick and outline as well as its colour. */
+.aircon-toggle[aria-pressed="true"] {
+  border: 2px solid var(--accent);
+  background: var(--accent-soft);
+  font-weight: 700;
+}
+
+.aircon-target-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.aircon-slider {
+  flex: 1;
+  min-width: 0;
+  height: var(--control-h);
+  margin: 0;
+  accent-color: var(--accent);
+  touch-action: none;
+}
+
+.aircon-target-value {
+  min-width: 3.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.aircon-note {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.aircon-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-top: 0.75rem;
+  font-weight: 550;
+}
+
+/* ---------- Heating tab ---------- */
+
+/* A Room's Room-wide target, in a widget of its own beside its Radiator Valves'. */
+.heating-valves {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.heating-valves h2 {
+  overflow-wrap: anywhere;
+}
+
+.heating-room-target {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.heating-target-value {
+  flex: 1;
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.heating-segmented {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.heating-readings {
+  flex-wrap: wrap;
+}
+
+.heating-note {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* Said in words, and marked by weight and colour, never by colour alone. */
+.heating-calling {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.heating-warning {
+  display: inline-flex;
+  flex: 1 1 100%;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  color: var(--warning);
+  font-weight: 700;
+}
+
+.heating-boost {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.heating-boost-status {
+  margin: 0;
+  font-weight: 650;
+}
+
+.heating-boost-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.heating-boost-buttons button {
+  flex: 1 1 8rem;
+}
+
+.heating-boost-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.heating-boost-form select {
+  min-height: var(--control-h);
+}
+
+/* Beside the tab's name, above the widgets: "Can't reach Hive". */
+.heating-unreachable {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--danger);
+  border-radius: var(--radius);
+  background: var(--danger-soft);
+  color: var(--text);
+}
+
+.heating-unreachable p {
+  margin: 0;
+}
+
+/* Says where Hive's Appliances, which start in "No room", are each given a Room. */
+.heating-no-room {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+}
+
+.heating-no-room p {
+  margin: 0;
+}
+
+/* ---------- Lights tab ---------- */
+
+/* Each Light, and each Room's Room-wide control, is a widget of its own, whose frame draws it as a card. */
+.light,
+.room-lights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.light-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.light-head h2 {
+  overflow-wrap: anywhere;
+}
+
+.light-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--text-muted);
+  font-weight: 550;
+}
+
+/* Said in words and marked by colour and weight, never by colour alone. */
+.light-not-answering {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+/* The colour it shows, beside its name in words. */
+.light-swatch {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+}
+
+.light-note {
+  margin: 0;
+}
+
+.light-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.light-power {
+  align-self: flex-start;
+  min-width: 8rem;
+}
+
+.light-value {
+  min-width: 4.5rem;
+  font-size: 1.125rem;
+}
+
+/* The hue's track in the colours it chooses between. */
+.light-hue {
+  accent-color: var(--text);
+}
+
+.light-hue::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    hsl(0 100% 50%),
+    hsl(60 100% 50%),
+    hsl(120 100% 50%),
+    hsl(180 100% 50%),
+    hsl(240 100% 50%),
+    hsl(300 100% 50%),
+    hsl(359 100% 50%)
+  );
+}
+
+.light-hue::-webkit-slider-thumb {
+  margin-top: -0.375rem;
+}
+
+.light-hue:disabled::-webkit-slider-runnable-track {
+  opacity: 0.4;
+}
+
+.room-lights-switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.room-lights-switches button {
+  flex: 1 1 7rem;
+}
+
+/* All off, beside the tab's name, and how it went beneath. */
+.lights-all-off-said {
+  flex: 1 1 100%;
+  order: 4;
+}
+
+.lights-all-off-said:empty {
+  display: none;
+}
+
+.lights-all-off-said p {
+  margin: 0;
+}
+
+.lights-done {
+  color: var(--text-muted);
+  font-weight: 550;
+}
+
+/* Each Room's Light Scenes, a widget beside its Room-wide control. */
+.room-light-scenes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.light-scenes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.light-scenes li + li {
+  border-top: 1px solid var(--border);
+}
+
+.light-scenes .room-row,
+.room-light-scenes .room-form {
+  padding: 0.5rem 0;
+}
+
+/* How many Lights it holds, beneath its name. */
+.light-scene-lights {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 550;
+}
+
+.light-scene-recall {
+  font-weight: 700;
+}
+
+.light-scene-save {
+  align-self: flex-start;
+}
+
+.room-light-scenes > p {
+  margin: 0;
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  button:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Windows Contrast Themes: the system's colours, and every boundary drawn. */
+@media (forced-colors: active) {
+  button,
+  .hub-chip,
+  .selected-mark,
+  .power,
+  .dialog,
+  .tv-picker-choices {
+    border: 1px solid ButtonText;
+  }
+
+  .tab-bar button[aria-selected="true"]::before,
+  .hub-dot {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+
+  .tv-picker-choices button[aria-pressed="true"],
+  .tv-volume .key-mute[aria-pressed="true"],
+  .aircon-toggle[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+  }
+
+  .dock {
+    backdrop-filter: none;
+  }
+}
+
+/* ---------- Appearance ---------- */
+
+.dialog fieldset {
+  min-width: 0;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+}
+
+.dialog legend {
+  margin-bottom: 0.5rem;
+  padding: 0;
+  font-weight: 650;
+}
+
+.appearance-note {
+  margin: 0.5rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Light, dark or system, side by side, as one control. */
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: var(--control-h);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-weight: 550;
+  cursor: pointer;
+  transition:
+    background-color 150ms var(--ease-out),
+    color 150ms var(--ease-out);
+}
+
+.segment input,
+.theme-choice input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segment:has(input:checked) {
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--text);
+}
+
+.segment:has(input:focus-visible),
+.theme-choice:has(input:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Each theme in its own colours, drawn from its own tokens. */
+.theme-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.625rem;
+}
+
+.theme-choice {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.5rem 0.5rem 0.625rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  transition:
+    border-color 150ms var(--ease-out),
+    transform 100ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .theme-choice:hover {
+    border-color: var(--border-strong);
+  }
+}
+
+.theme-choice:has(input:checked) {
+  border-color: var(--accent);
+}
+
+.theme-swatch {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.25rem;
+  height: 3.5rem;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--accent) 6%, var(--bg-base));
+}
+
+.theme-swatch-accent {
+  grid-row: span 2;
+  border-radius: 0.375rem;
+  background: var(--accent);
+}
+
+.theme-swatch-soft {
+  border-radius: 0.375rem;
+  background: var(--accent-soft);
+}
+
+.theme-swatch-surface {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--surface);
+}
+
+.theme-name {
+  padding-inline: 0.25rem;
+  font-weight: 550;
+}
+
+.theme-check {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: none;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.theme-check .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.theme-choice:has(input:checked) .theme-check {
+  display: grid;
+}
+
+/* ---------- Widgets, on the TV and Aircon tabs ---------- */
+
+/* The TV, the picker and the Widgets menu, in a row from a tablet up. */
+.widget-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.widget-toolbar h1 {
+  margin: 0;
+}
+
+.widget-toolbar .tv-picker {
+  flex: 1 1 14rem;
+  order: 3;
+  margin: 0;
+}
+
+.widgets-menu {
+  position: relative;
+  z-index: 2;
+  margin-left: auto;
+}
+
+@media (min-width: 40rem) {
+  .widget-toolbar .tv-picker {
+    order: 0;
+  }
+
+  .widgets-menu {
+    order: 1;
+  }
+}
+
+.widgets-menu-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0 0.375rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.widgets-menu-panel {
+  position: absolute;
+  inset: calc(100% + 0.25rem) 0 auto auto;
+  width: min(18rem, calc(100vw - 2rem));
+  padding: 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  animation: menu-in 160ms var(--ease-out);
+}
+
+.widgets-menu-panel fieldset {
+  margin: 0 0 0.5rem;
+  padding: 0;
+  border: 0;
+}
+
+.widgets-menu-panel legend {
+  margin-bottom: 0.25rem;
+  padding: 0 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+
+.widgets-menu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.widgets-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: var(--control-h);
+  padding: 0 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .widgets-menu-item:hover {
+    background: var(--surface-2);
+  }
+}
+
+.widgets-menu-item input {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.widgets-menu-item:has(input:not(:checked)) {
+  color: var(--text-muted);
+}
+
+.widgets-menu-reset {
+  width: 100%;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+
+/*
+ * The grid: each widget placed on it by the board, in rows 24px tall with
+ * 12px between. A widget's content scrolls within it, however small it is
+ * made.
+ */
+.widget-grid {
+  position: relative;
+}
+
+.widget {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+/* Once drawn in place, a widget pushed out of the way, or put back, glides there. */
+.widget-board-settled .widget-grid {
+  transition: height 220ms var(--ease-out);
+}
+
+.widget-board-settled .widget {
+  transition:
+    transform 220ms var(--ease-out),
+    width 220ms var(--ease-out),
+    height 220ms var(--ease-out),
+    rotate 160ms var(--ease-out),
+    scale 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out),
+    border-color 160ms var(--ease-out);
+}
+
+/* Playing, the now-playing bar stands out in the accent. */
+.widget:has(.now-playing) {
+  border-color: var(--accent);
+}
+
+.widget-menu-open {
+  z-index: 3;
+}
+
+/* Picked up: tilted to the right, lifted, and following the pointer exactly. */
+.widget-board .widget-dragging,
+.widget-board .widget-resizing {
+  z-index: 4;
+  box-shadow: var(--shadow-lg);
+  transition:
+    rotate 160ms var(--ease-out),
+    scale 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+
+.widget-dragging {
+  rotate: 2.5deg;
+  scale: 1.02;
+}
+
+.widget-board-dragging,
+.widget-board-dragging * {
+  cursor: grabbing !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Where it will land. */
+.widget-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  transition:
+    transform 120ms var(--ease-out),
+    width 120ms var(--ease-out),
+    height 120ms var(--ease-out);
+}
+
+/* Landed: the widgets around it shake, as if it had been dropped among them. */
+.widget-shake {
+  animation: widget-shake 420ms var(--ease-out);
+}
+
+@keyframes widget-shake {
+  15% {
+    translate: -3px 0;
+    rotate: -0.6deg;
+  }
+  35% {
+    translate: 3px 1px;
+    rotate: 0.6deg;
+  }
+  55% {
+    translate: -2px 0;
+    rotate: -0.3deg;
+  }
+  75% {
+    translate: 1px 0;
+    rotate: 0.2deg;
+  }
+}
+
+.widget-body {
+  flex: 1;
+  min-height: 0;
+  padding: 0.625rem 0.875rem 0.75rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: inherit;
+  scrollbar-width: thin;
+}
+
+/* Every widget's title, its own heading or the board's, alike, clear of its grip and Hide. */
+.widget-title,
+.widget-body h2 {
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+  margin: 0 4.5rem 0.375rem 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.widget-body h3 {
+  margin: 0.75rem 0 0.375rem;
+  font-size: 0.9375rem;
+}
+
+/* On the grid, each section is the widget's content, not a card of its own. */
+.widget-body
+  :is(
+    .tv-now-showing,
+    .tv-keyboard,
+    .tv-apps,
+    .tv-developer,
+    .watch-and-listen,
+    .tv-list,
+    .now-playing,
+    .tv-power,
+    .tv-volume,
+    .tv-keys,
+    .tv-quick
+  ) {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.widget-body .now-playing-header h2 {
+  margin-bottom: 0;
+}
+
+.widget-body .developer-toggle {
+  justify-content: flex-start;
+  min-height: 2rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.widget-idle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+.widget-idle p {
+  margin: 0;
+}
+
+/* Nothing playing: the space the bar takes while playing, holding the way to play something. */
+.now-playing-idle {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.now-playing-idle p {
+  max-width: 28rem;
+  margin: auto;
+  text-align: center;
+}
+
+.now-playing-idle-mark {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: auto auto 0.5rem;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.now-playing-idle-mark + p {
+  margin-top: 0;
+}
+
+/* Its grip and Hide, in its top right corner. */
+.widget-controls {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+  display: flex;
+  gap: 0.125rem;
+}
+
+.widget-grip,
+.widget-hide {
+  width: 2rem;
+  min-height: 2rem;
+  padding: 0;
+  border-color: transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+}
+
+.widget-grip {
+  cursor: grab;
+  touch-action: none;
+}
+
+.widget-grip[aria-expanded="true"] {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+/* With a mouse, Hide shows on the widget it is over, or as one of its controls has focus. */
+@media (hover: hover) {
+  .widget-hide {
+    opacity: 0;
+    transition: opacity 150ms var(--ease-out);
+  }
+
+  .widget:hover .widget-hide,
+  .widget-controls:focus-within .widget-hide {
+    opacity: 1;
+  }
+}
+
+.widget-menu {
+  position: absolute;
+  inset: calc(100% + 0.25rem) 0 auto auto;
+  width: max-content;
+  padding: 0.5rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  animation: menu-in 160ms var(--ease-out);
+}
+
+.widget-menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.widget-menu button {
+  justify-content: flex-start;
+  white-space: nowrap;
+  min-height: 2.5rem;
+  padding: 0 0.625rem;
+  font-size: 0.875rem;
+}
+
+.widget-menu-hide {
+  width: 100%;
+}
+
+/* Its corner, to drag bigger or smaller with a mouse. */
+.widget-resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-bottom-right-radius: var(--radius-lg);
+  background: linear-gradient(
+    135deg,
+    transparent 0 55%,
+    var(--border-strong) 55% 62%,
+    transparent 62% 72%,
+    var(--border-strong) 72% 79%,
+    transparent 79%
+  );
+  opacity: 0.6;
+  cursor: nwse-resize;
+  touch-action: none;
+}
+
+@media (hover: hover) {
+  .widget-resize {
+    opacity: 0;
+    transition: opacity 150ms var(--ease-out);
+  }
+
+  .widget:hover .widget-resize,
+  .widget-resizing .widget-resize {
+    opacity: 1;
+  }
+}
+
+/* A widget lays its content out for its own width, however it has been sized. */
+.widget-body {
+  container-type: inline-size;
+}
+
+/* Keys made wide: the menus and the D-pad beside the media, colour and number keys, half as tall. */
+@container (min-width: 28rem) {
+  .widget-body .tv-keys {
+    display: grid;
+    grid-template-areas:
+      "problem problem"
+      "menus media"
+      "menus colours"
+      "dpad numbers";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1.25rem;
+    align-items: start;
+  }
+
+  .tv-keys > .problem {
+    grid-area: problem;
+  }
+
+  .tv-keys .menu-keys {
+    grid-area: menus;
+  }
+
+  .tv-keys .d-pad {
+    grid-area: dpad;
+    grid-template-columns: repeat(3, 4rem);
+    grid-auto-rows: 4rem;
+  }
+
+  .tv-keys .media-keys {
+    grid-area: media;
+  }
+
+  .tv-keys .colour-keys {
+    grid-area: colours;
+  }
+
+  .tv-keys .number-keys {
+    grid-area: numbers;
+  }
+}
+
+/* ---------- Version and updates (FR-61) ---------- */
+
+.version-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0.75rem 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.version-list dt {
+  color: var(--text-muted);
+}
+
+.version-list dd {
+  margin: 0;
+}
+
+.version-note {
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Settings: a menu of its parts, and the one chosen ---------- */
+
+/*
+ * On a phone the menu sits beneath the heading, above the settings, its items
+ * wrapping onto as many lines as they need, never scrolling sideways. From a
+ * tablet's width it is a side menu along the left edge of the screen, the
+ * whole height between the app bar and the dock and footer, kept in view as
+ * the settings beside it scroll. On a wide screen, it stands beside the tabs'
+ * rail, as the rest of the screen does.
+ */
+.settings-layout {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+}
+
+.settings-title {
+  margin: 0;
+}
+
+.settings-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.settings-nav-item {
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0 0.875rem;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+/* Above a button's own hover and press, so that the part shown always looks chosen. */
+.settings-nav .settings-nav-item[aria-current="page"] {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 650;
+}
+
+.settings-nav-item[aria-current="page"] .icon {
+  color: var(--accent);
+}
+
+@media (hover: hover) {
+  .settings-nav-item:hover:not([aria-current="page"]) {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+}
+
+/* Its parts' cards, side by side where there's room, as each part's sections are its own. */
+.settings-panel {
+  min-width: 0;
+}
+
+.settings-panel > section:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 48rem) {
+  /* Settings runs edge to edge, so that its menu meets the screen's left edge. */
+  .screen-settings {
+    max-width: none;
+    margin: 0;
+    padding: 0 max(0.75rem, env(safe-area-inset-right)) 0 0;
+  }
+
+  .settings-layout {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "nav title"
+      "nav panel";
+    column-gap: 1.5rem;
+    row-gap: 1rem;
+  }
+
+  .settings-title {
+    grid-area: title;
+    padding-top: 1rem;
+  }
+
+  .settings-panel {
+    grid-area: panel;
+    padding-bottom: 1.5rem;
+  }
+
+  .settings-nav {
+    grid-area: nav;
+    position: sticky;
+    top: var(--app-bar-height);
+    height: calc(100dvh - var(--app-bar-height) - var(--dock-height) - var(--footer-height));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 1rem 0.75rem 1rem max(0.75rem, env(safe-area-inset-left));
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .settings-nav ul {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.25rem;
+  }
+}
+
+/*
+ * On a wide screen the dock is the rail down the left, not a bar along the
+ * bottom: Settings starts beside it, as every screen does, and its menu
+ * reaches down to the footer.
+ */
+@media (min-width: 64rem) and (min-height: 30.01rem) {
+  .screen-settings {
+    margin-left: calc(var(--rail-width) + env(safe-area-inset-left));
+  }
+
+  .settings-nav {
+    height: calc(100dvh - var(--app-bar-height) - var(--footer-height));
+    padding-left: 0.75rem;
+  }
+}
+
+/* A short screen, whose dock sits at the page's end: the menu is as long as its parts. */
+@media (min-width: 48rem) and (max-height: 30rem) {
+  .screen-settings {
+    padding-bottom: 0;
+  }
+
+  .settings-nav {
+    position: static;
+    height: auto;
+    min-height: 100%;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .settings-nav li {
+    flex: 1 1 auto;
+  }
+
+  .settings-nav-item {
+    justify-content: center;
+    border-color: var(--border);
+    background: var(--surface);
+  }
+}
+
+/* Heating, until its Driver arrives: what it will hold, said plainly. */
+.settings-panel > .settings-empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding-block: 2rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.settings-empty h2 {
+  color: var(--text);
+}
+
+.settings-empty p {
+  max-width: 32rem;
+  margin: 0;
+}
+
+/* ---------- Network tab: every device on the home network, and the Bluetooth devices near the Hub ---------- */
+
+/* Below the title and the Widgets menu, across the board: what the view shows, its choice and its scan. */
+.network-controls {
+  display: grid;
+  flex: 1 1 100%;
+  order: 3;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.network-alone {
+  margin-bottom: 0;
+}
+
+.network-head {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.network-lead {
+  max-width: 48rem;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.network-view {
+  max-width: 24rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.network-segmented {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.network-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.network-status {
+  margin: 0;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* How far a scan, or a check of every port, has got: a bar in the accent, on the surface it sits on. */
+.network-progress {
+  width: 100%;
+  height: 0.5rem;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-3);
+  accent-color: var(--accent);
+  appearance: none;
+}
+
+.network-progress::-webkit-progress-bar {
+  background: var(--surface-3);
+}
+
+.network-progress::-webkit-progress-value {
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.network-progress::-moz-progress-bar {
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.network-filter {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 24rem;
+  font-weight: 600;
+}
+
+.network-none {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* One device, in its widget, which is its card. */
+.network-device {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.network-device-name {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.widget-body .network-device-name {
+  min-height: 0;
+  margin: 0 4.5rem 0 0;
+  color: var(--text);
+  font-size: 1rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.network-rename {
+  align-self: flex-start;
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+}
+
+.network-name-form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.network-name-form label {
+  display: grid;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+.network-name-form input {
+  width: 100%;
+}
+
+.network-name-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.network-room {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.network-room-picker {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+.network-room-picker select {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Two across, or one where a widget is too narrow for a MAC address in half of it. */
+.network-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.5rem 1rem;
+  margin: 0;
+}
+
+.network-facts dt {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.network-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.9375rem;
+}
+
+.network-ports {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.network-ports h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.network-port-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.network-port-list .chip {
+  white-space: normal;
+}
+
+.network-port-list code {
+  font-weight: 700;
+}
+
+.network-port-check {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.network-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.network-hint {
+  max-width: 48rem;
+}
+
+/* ---------- Amazon tab: the owner's Echo devices ---------- */
+
+.amazon-sign-in {
+  max-width: 40rem;
+}
+
+.amazon-sign-in-form,
+.amazon-speak,
+.amazon-music {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.amazon-sign-in-form {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 22rem;
+}
+
+.amazon-speak label,
+.amazon-music label,
+.amazon-sign-in-form label,
+.amazon-row label,
+.amazon-level label {
+  font-weight: 600;
+}
+
+.amazon-field {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.amazon-speak input,
+.amazon-music input,
+.amazon-music select,
+.amazon-row select {
+  width: 100%;
+  min-width: 0;
+}
+
+.amazon-speak .network-note:empty {
+  display: none;
+}
+
+.amazon-account {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.amazon-account .network-lead {
+  flex: 1 1 18rem;
+}
+
+.amazon-section {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.amazon-section h3 {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.amazon-now {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.amazon-art {
+  flex: none;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.amazon-now-text {
+  display: grid;
+  min-width: 0;
+}
+
+.amazon-title {
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.amazon-transport,
+.amazon-quick,
+.amazon-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* A level: its name and slider, in its label, then its value. */
+.amazon-level {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.5rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.amazon-level .amazon-field {
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  align-items: center;
+}
+
+.amazon-level .volume-slider {
+  width: 100%;
+}
+
+.amazon-level output {
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.amazon-row {
+  display: grid;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+}
+
+.amazon-details {
+  border-top: 1px solid var(--border);
+  padding-top: 0.5rem;
+}
+
+.amazon-details > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: var(--control-h);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.amazon-details[open] > summary {
+  margin-bottom: 0.25rem;
+}
+
+.amazon-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.amazon-list > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.amazon-list > li + li {
+  border-top: 1px solid var(--border);
+}
+
+.amazon-list-text {
+  display: grid;
+  flex: 1 1 10rem;
+  min-width: 0;
+}
+
+/* ---------- Rooms tab: a Room's every Appliance ---------- */
+
+.rooms-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.rooms-toolbar h1 {
+  margin: 0;
+}
+
+.rooms-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.rooms-picker select {
+  min-width: 12rem;
+  min-height: var(--control-h);
+}
+
+/* As many cards across as fit, each wide enough for an Air Conditioner's controls. */
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.rooms-card {
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.rooms-device {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.rooms-device-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rooms-device-head h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.rooms-device-head .icon {
+  color: var(--accent);
+}
+
+.rooms-device-kind {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* The devices put in the Room from the Network tab, one to a row. */
+.rooms-devices {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rooms-devices > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.5rem 0;
+}
+
+.rooms-devices > li + li {
+  border-top: 1px solid var(--border);
+}
+
+.rooms-devices .icon {
+  flex: none;
+  margin-top: 0.125rem;
+  color: var(--accent);
+}
+
+.rooms-devices-text {
+  display: grid;
+  min-width: 0;
+}
+
+.rooms-devices-name {
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.rooms-devices-meta {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+/*
+ * The floor plan: the drawing, black on white, blended into the page, and
+ * turned light on dark in dark mode; each Room on it tinted as it is
+ * hovered, focused or shown.
+ */
+.floor-plan {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 0.5rem 1.5rem;
+  max-width: 64rem;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.floor-plan-art {
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode="light"]) .floor-plan-art {
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
+}
+
+:root[data-mode="dark"] .floor-plan-art {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
+
+.floor-plan-floor {
+  margin: 0;
+}
+
+.floor-plan-floor svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.floor-plan-floor figcaption {
+  color: var(--text-muted);
+  font-weight: 600;
+  text-align: center;
+}
+
+.floor-plan-room polygon {
+  cursor: pointer;
+  fill: var(--accent);
+  fill-opacity: 0.06;
+  stroke: var(--accent);
+  stroke-opacity: 0.35;
+  stroke-width: 2;
+  transition:
+    fill-opacity 150ms var(--ease-out),
+    stroke-opacity 150ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .floor-plan-room polygon:hover {
+    fill-opacity: 0.18;
+    stroke-opacity: 0.7;
+  }
+}
+
+.floor-plan-room polygon:focus {
+  outline: none;
+}
+
+.floor-plan-room polygon:focus-visible {
+  stroke-opacity: 1;
+  stroke-width: 5;
+}
+
+.floor-plan-room polygon[aria-pressed="true"] {
+  fill-opacity: 0.38;
+  stroke-opacity: 1;
+  stroke-width: 3;
+}
+
+.floor-plan-room text {
+  fill: var(--text);
+  font-weight: 650;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 4px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floor-plan-room polygon {
+    transition: none;
+  }
+}
+
+/* Brought into view below the app bar as a Room is tapped on the floor plan. */
+.rooms-shown {
+  scroll-margin-top: calc(var(--app-bar-height) + 0.75rem);
+}
+
+.rooms-toolbar-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rooms-edit-plan[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.rooms-plan-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  max-width: 64rem;
+  margin: 0 auto 0.5rem;
+  color: var(--text-muted);
+}
+
+.rooms-plan-hint p {
+  margin: 0;
+}
+
+/* A place that is no Room yet: dashed, its prompt muted, until it is named. */
+.floor-plan-room-unnamed polygon {
+  fill-opacity: 0.02;
+  stroke-dasharray: 8 6;
+  stroke-opacity: 0.6;
+}
+
+.floor-plan-room-unnamed text {
+  fill: var(--text-muted);
+  font-weight: 550;
+}
+
+/* While editing, every place is outlined, as each can be changed. */
+.floor-plan-editing .floor-plan-room polygon {
+  stroke-opacity: 0.9;
+  stroke-dasharray: 8 6;
+}
+
+.place-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.place-choice {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.place-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.place-option input[type="radio"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--accent);
+}
+
+.place-choice select,
+.place-choice input[type="text"] {
+  min-height: var(--control-h);
+}
+
+.place-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.place-actions .button-danger {
+  margin-right: auto;
+}
+
+/* What else a Boost is made of, as its dialog opens: a zone's Radiator Valves, or the whole home's. */
+.heating-boost-also {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* ---------- Settings: cards that say what they hold, and rows of Appliances ---------- */
+
+/* A card's heading, with what it holds said beneath it, and its status or count beside. */
+.settings-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.settings-card-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.settings-card-lead {
+  max-width: 48rem;
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+}
+
+/* How many a card holds, beside its heading. */
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  height: 1.5rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A word or two of status: a Room, "No room", "Signed in". */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chip .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.chip-good {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.chip-good .icon {
+  color: var(--accent);
+}
+
+/* Wanting attention, not an error: an Appliance with no Room. */
+.chip-warning {
+  border-color: color-mix(in srgb, var(--warning) 45%, transparent);
+  background: color-mix(in srgb, var(--warning) 12%, var(--surface));
+  color: var(--text);
+}
+
+.device-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.device-list > li + li {
+  border-top: 1px solid var(--border);
+}
+
+.device-list > li {
+  padding: 0.625rem 0;
+}
+
+.device-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.device-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.device-text {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.device-name {
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.device-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.device-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/*
+ * The floor plan's editor: the drawing with the tools above it, and beside
+ * it on a wide screen, or below on a phone, the image, floors and places.
+ * Outlines are drawn in screen pixels, however big the drawing is.
+ */
+.floor-plan-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+@media (min-width: 60rem) {
+  .floor-plan-editor {
+    grid-template-columns: minmax(0, 1fr) 19rem;
+  }
+}
+
+.floor-plan-editor-main {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.floor-plan-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.floor-plan-tools button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.floor-plan-editor-hint,
+.floor-plan-editor-status,
+.floor-plan-editor-picture {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.floor-plan-editor-status {
+  min-height: 1.6em;
+}
+
+.floor-plan-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70dvh;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  /* A drag draws, and never scrolls, unless the tool only picks. */
+  touch-action: none;
+  cursor: crosshair;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.floor-plan-canvas-select {
+  touch-action: auto;
+  cursor: default;
+}
+
+.floor-plan-canvas-select .floor-plan-editor-place polygon {
+  cursor: pointer;
+}
+
+/* A chosen place's corners can be dragged, so a touch on the drawing draws, and never scrolls. */
+.floor-plan-canvas-handles {
+  touch-action: none;
+}
+
+/* While a corner is picked, a tap anywhere is where it goes, even on another place. */
+.floor-plan-canvas-placing .floor-plan-editor-place {
+  pointer-events: none;
+}
+
+/* A chosen place's corners, each with a touch target of 24 pixels or more round it, and a dot on each edge that adds one. */
+.floor-plan-handle,
+.floor-plan-handle-edge,
+.floor-plan-handle-reach {
+  vector-effect: non-scaling-stroke;
+}
+
+.floor-plan-handle {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.floor-plan-handle-picked {
+  fill: var(--accent);
+}
+
+.floor-plan-handle-reach {
+  fill: transparent;
+  cursor: move;
+}
+
+.floor-plan-handle-edge {
+  fill: var(--accent);
+  fill-opacity: 0.55;
+  stroke: var(--surface);
+  stroke-width: 1.5;
+  cursor: copy;
+}
+
+.floor-plan-editor-chosen {
+  flex: 1;
+  align-self: center;
+  font-weight: 600;
+}
+
+/* While a tool draws, a tap lands on the drawing, not on a place already there. */
+.floor-plan-canvas:not(.floor-plan-canvas-select) .floor-plan-editor-place,
+.floor-plan-canvas:not(.floor-plan-canvas-select) .floor-plan-editor-floor,
+.floor-plan-canvas .floor-plan-pending,
+.floor-plan-canvas text {
+  pointer-events: none;
+}
+
+.floor-plan-editor-place polygon {
+  fill: var(--accent);
+  fill-opacity: 0.12;
+  stroke: var(--accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.floor-plan-editor-place-selected polygon {
+  fill-opacity: 0.35;
+  stroke-width: 4;
+}
+
+.floor-plan-editor-place text,
+.floor-plan-editor-floor text {
+  fill: var(--text);
+  font-weight: 650;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 4px;
+}
+
+.floor-plan-editor-floor rect {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 2;
+  stroke-dasharray: 10 8;
+  vector-effect: non-scaling-stroke;
+}
+
+.floor-plan-editor-floor text {
+  text-anchor: start;
+  fill: var(--text-muted);
+}
+
+.floor-plan-pending polyline,
+.floor-plan-pending rect {
+  fill: var(--accent);
+  fill-opacity: 0.1;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.floor-plan-pending-corner {
+  fill: var(--accent);
+}
+
+.floor-plan-editor-shape-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.floor-plan-editor-panel {
+  display: grid;
+  gap: 1.25rem;
+  align-content: start;
+}
+
+.floor-plan-editor-panel h3 {
+  margin: 0 0 0.5rem;
+}
+
+.floor-plan-editor-panel ul {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.floor-plan-editor-panel li + li {
+  margin-top: 0;
+}
+
+.floor-plan-editor-file {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.floor-plan-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.floor-plan-editor-row input,
+.floor-plan-editor-row > button:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.floor-plan-editor-row > button:first-child {
+  justify-content: space-between;
+  text-align: left;
+}
+
+.floor-plan-editor-row > button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.floor-plan-editor-place-id {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.floor-plan-editor-leaving {
+  flex: 1;
+  font-weight: 600;
+}
+
+/* ---------- Ring tab: the owner's Ring doorbells, cameras and chimes ---------- */
+
+/* A camera's picture, as wide as the widget, at the camera's own 16:9. */
+.ring-view {
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--border);
+  aspect-ratio: 16 / 9;
+}
+
+.ring-view img,
+.ring-view video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.ring-ding {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-weight: 650;
+}
+
+/* ---------- Rooms tab: a Room's widgets ---------- */
+
+/* In a widget, a Room's card is the widget's content, not a card of its own. */
+.widget-body .rooms-card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* Hive's, together in one widget, each divided from the last. */
+.widget-body .rooms-card + .rooms-card {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.rooms-board-title {
+  margin: 0;
+  font-size: 1.125rem;
+}

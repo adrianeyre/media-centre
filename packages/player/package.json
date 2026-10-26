@@ -1,0 +1,25 @@
+{
+  "name": "@media-centre/player",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The app installed on a TV that plays a Media File it has been sent.",
+  "type": "module",
+  "exports": {
+    "./fake-playback": "./src/playback/fake-playback.ts",
+    "./playback-reports": "./src/playback/playback-reports.ts",
+    "./subtitles": "./src/playback/subtitles.ts"
+  },
+  "scripts": {
+    "build": "vite build && es-check",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@media-centre/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
+    "es-check": "^9.8.1",
+    "happy-dom": "^21.0.4",
+    "vite": "^8.3.5"
+  }
+}

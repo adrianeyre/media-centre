@@ -1,0 +1,25 @@
+# The Hub, the Remote, the Player and the message types they share (PRD NFR-1).
+packages:
+  - packages/*
+
+# tsx depends on esbuild, whose postinstall fetches its platform binary.
+allowBuilds:
+  esbuild: true
+  # ring-client-api's: ffmpeg-for-homebridge's fetches an ffmpeg the Hub never
+  # runs, as the Remote's browser receives Ring's live video itself (ADR 0014);
+  # protobufjs's only checks its own version.
+  ffmpeg-for-homebridge: false
+  protobufjs: false
+
+minimumReleaseAgeExclude:
+  - "@typescript-eslint/eslint-plugin@8.72.0"
+  - "@typescript-eslint/parser@8.72.0"
+  - "@typescript-eslint/project-service@8.72.0"
+  - "@typescript-eslint/scope-manager@8.72.0"
+  - "@typescript-eslint/tsconfig-utils@8.72.0"
+  - "@typescript-eslint/type-utils@8.72.0"
+  - "@typescript-eslint/types@8.72.0"
+  - "@typescript-eslint/typescript-estree@8.72.0"
+  - "@typescript-eslint/utils@8.72.0"
+  - "@typescript-eslint/visitor-keys@8.72.0"
+  - typescript-eslint@8.72.0

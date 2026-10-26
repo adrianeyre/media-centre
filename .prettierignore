@@ -1,0 +1,8 @@
+# Generated, or not ours to format. CHANGELOG.md is written by semantic-release.
+pnpm-lock.yaml
+**/dist/
+data/
+test-results/
+playwright-report/
+.sandcastle/
+CHANGELOG.md

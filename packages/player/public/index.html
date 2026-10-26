@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920" />
+    <title>Media Centre</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Samsung's webapis, with AVPlay, on a TV. A desktop browser has none, and the Player plays through its fake. -->
+    <script src="$WEBAPIS/webapis/webapis.js"></script>
+  </head>
+  <body>
+    <!-- Where AVPlay draws the picture, behind the page. -->
+    <object id="avplayer" type="application/avplayer"></object>
+    <main id="player"></main>
+    <!-- The subtitle shown, over the picture, which the Player draws itself. -->
+    <div id="subtitles" hidden></div>
+    <!-- Whether the video is paused or playing, and how far into it, over the bottom of the picture. -->
+    <div id="overlay" hidden></div>
+    <!-- A classic script, not a module, which Tizen 4's Chromium 56 can't load. -->
+    <script src="player.js"></script>
+  </body>
+</html>

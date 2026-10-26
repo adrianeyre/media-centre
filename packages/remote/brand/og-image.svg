@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1B2740" />
+      <stop offset="1" stop-color="#080D19" />
+    </linearGradient>
+    <linearGradient id="play" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86EFAC" />
+      <stop offset="1" stop-color="#16A34A" />
+    </linearGradient>
+    <linearGradient id="headline" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4ADE80" />
+      <stop offset="1" stop-color="#2DD4BF" />
+    </linearGradient>
+    <radialGradient id="glow-green" cx="0.12" cy="0.1" r="0.7">
+      <stop offset="0" stop-color="#22C55E" stop-opacity="0.22" />
+      <stop offset="1" stop-color="#22C55E" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="glow-blue" cx="0.92" cy="0.95" r="0.6">
+      <stop offset="0" stop-color="#3B82F6" stop-opacity="0.2" />
+      <stop offset="1" stop-color="#3B82F6" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#FFFFFF" fill-opacity="0.05" />
+    </pattern>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1A2438" />
+      <stop offset="1" stop-color="#121B2C" />
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0E1626" />
+      <stop offset="1" stop-color="#0A101D" />
+    </linearGradient>
+    <linearGradient id="warm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F59E0B" />
+      <stop offset="1" stop-color="#FCD34D" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000000" flood-opacity="0.55" />
+    </filter>
+  </defs>
+  <style>
+    text { font-family: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .muted { fill: #A3B1C6; }
+    .label { fill: #A3B1C6; font-size: 13px; font-weight: 700; letter-spacing: 1.2px; }
+    .value { fill: #F1F5F9; font-weight: 750; }
+  </style>
+
+  <rect width="1200" height="630" fill="#080D19" />
+  <rect width="1200" height="630" fill="url(#dots)" />
+  <rect width="1200" height="630" fill="url(#glow-green)" />
+  <rect width="1200" height="630" fill="url(#glow-blue)" />
+
+  <!-- The icon and the name -->
+  <g transform="translate(72 70) scale(0.140625)">
+    <rect width="512" height="512" rx="112" fill="url(#tile)" stroke="#334155" stroke-width="6" />
+    <g fill="none" stroke="#F1F5F9" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="92" y="118" width="328" height="226" rx="34" />
+      <path d="M256 344v42M184 396h144" />
+    </g>
+    <path d="M226 180v102l90-51z" fill="url(#play)" stroke="url(#play)" stroke-width="20" stroke-linejoin="round" />
+  </g>
+  <text x="160" y="119" font-size="34" font-weight="750" fill="#F1F5F9" letter-spacing="-0.5">Media Centre</text>
+
+  <!-- The promise -->
+  <text x="72" y="236" font-size="66" font-weight="800" fill="#F8FAFC" letter-spacing="-2">One remote for</text>
+  <text x="72" y="312" font-size="66" font-weight="800" fill="url(#headline)" letter-spacing="-2">your whole home</text>
+  <text x="72" y="374" font-size="25" font-weight="500" class="muted">TVs, air conditioners, lights, heating, Echo and</text>
+  <text x="72" y="410" font-size="25" font-weight="500" class="muted">Ring, room by room. And your films, shows and</text>
+  <text x="72" y="446" font-size="25" font-weight="500" class="muted">music on any TV in the house.</text>
+
+  <g font-size="20" font-weight="650">
+    <rect x="72" y="494" width="236" height="46" rx="23" fill="#22C55E" fill-opacity="0.12" stroke="#22C55E" stroke-opacity="0.45" stroke-width="1.5" />
+    <text x="190" y="524" text-anchor="middle" fill="#4ADE80">Runs on your own Hub</text>
+    <rect x="322" y="494" width="160" height="46" rx="23" fill="#22C55E" fill-opacity="0.12" stroke="#22C55E" stroke-opacity="0.45" stroke-width="1.5" />
+    <text x="402" y="524" text-anchor="middle" fill="#4ADE80">No account</text>
+    <rect x="496" y="494" width="168" height="46" rx="23" fill="#22C55E" fill-opacity="0.12" stroke="#22C55E" stroke-opacity="0.45" stroke-width="1.5" />
+    <text x="580" y="524" text-anchor="middle" fill="#4ADE80">Open source</text>
+  </g>
+
+  <!-- A phone showing a Room's widgets -->
+  <g transform="translate(800 44)" filter="url(#shadow)">
+    <rect width="320" height="560" rx="48" fill="#1E293B" stroke="#334155" stroke-width="3" />
+    <rect x="12" y="12" width="296" height="536" rx="38" fill="url(#screen)" />
+    <rect x="124" y="26" width="72" height="20" rx="10" fill="#000000" />
+
+    <text x="32" y="88" class="label">ROOM</text>
+    <text x="32" y="116" font-size="24" class="value" letter-spacing="-0.4">Living Room</text>
+
+    <!-- TV -->
+    <g transform="translate(26 136)">
+      <rect width="268" height="96" rx="20" fill="url(#card)" stroke="#2A3752" />
+      <text x="18" y="30" class="label">TV</text>
+      <text x="18" y="62" font-size="21" class="value">Netflix</text>
+      <text x="18" y="84" font-size="14" font-weight="500" class="muted">On · Volume 18</text>
+      <circle cx="226" cy="50" r="24" fill="#22C55E" />
+      <path d="M226 38v11M217.5 43.5a12 12 0 1 0 17 0" fill="none" stroke="#052E16" stroke-width="3.5" stroke-linecap="round" />
+    </g>
+
+    <!-- Lights -->
+    <g transform="translate(26 244)">
+      <rect width="268" height="96" rx="20" fill="url(#card)" stroke="#2A3752" />
+      <text x="18" y="30" class="label">LIGHTS</text>
+      <text x="18" y="60" font-size="21" class="value">Warm white</text>
+      <text x="250" y="60" font-size="18" text-anchor="end" class="value">70%</text>
+      <rect x="18" y="74" width="232" height="8" rx="4" fill="#263354" />
+      <rect x="18" y="74" width="162" height="8" rx="4" fill="url(#warm)" />
+      <circle cx="180" cy="78" r="9" fill="#FDE68A" stroke="#080D19" stroke-width="2" />
+    </g>
+
+    <!-- Heating and Aircon, side by side -->
+    <g transform="translate(26 352)">
+      <rect width="128" height="118" rx="20" fill="url(#card)" stroke="#2A3752" />
+      <text x="16" y="30" class="label">HEATING</text>
+      <text x="16" y="78" font-size="34" class="value" letter-spacing="-1">21.5°</text>
+      <text x="16" y="102" font-size="14" font-weight="600" fill="#FB923C">Heating</text>
+    </g>
+    <g transform="translate(166 352)">
+      <rect width="128" height="118" rx="20" fill="url(#card)" stroke="#2A3752" />
+      <text x="16" y="30" class="label">AIRCON</text>
+      <text x="16" y="78" font-size="34" class="value" letter-spacing="-1">22°</text>
+      <text x="16" y="102" font-size="14" font-weight="600" fill="#38BDF8">Cool · Auto</text>
+    </g>
+
+    <!-- The tab bar -->
+    <g transform="translate(26 486)">
+      <rect width="268" height="46" rx="23" fill="#151F33" stroke="#2A3752" />
+      <rect x="6" y="6" width="58" height="34" rx="17" fill="#22C55E" fill-opacity="0.18" />
+      <g fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <g stroke="#4ADE80"><rect x="25" y="15" width="20" height="13" rx="2.5" /><path d="M30 32h10" /></g>
+        <g stroke="#A3B1C6">
+          <path d="M100 14a7 7 0 0 0-4 12.5V30h8v-3.5A7 7 0 0 0 100 14zM97 33h6" />
+          <path d="M163 15v11a5 5 0 1 0 4 0V15a2 2 0 0 0-4 0z" />
+          <path d="M222 23l10-8 10 8v10h-20z" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
