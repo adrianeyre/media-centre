@@ -3,11 +3,13 @@
   The Media Centre website. Its double-brace placeholders are filled in by
   site/build.ts, which holds the repository's and the site's addresses; the
   screenshots and icons it names are copied in from docs/images/ and the Remote
-  at build time, and the font from site/fonts/. Every URL is relative, as the
-  site is served under a project page's path. Everything works without
-  JavaScript: script.mts (built into script.js) only adds the menu button, the
-  tabs, the light and dark switches on screenshots, the screenshot viewer, copy
-  buttons and the policies' dialogs.
+  at build time, and the font from site/fonts/. Every URL is relative, so the
+  page works at any path. Everything works without JavaScript: script.mts
+  (built into script.js) only adds the menu button, the tabs, the light and
+  dark switches on screenshots, the screenshot viewer, copy buttons and the
+  policies' dialogs, and stage/ (built into stage/stage.js) draws the product
+  illustrations into each [data-stage] element, over the screenshot, or the
+  nothing, that a reader without JavaScript sees there instead.
 -->
 <html lang="en-GB" class="no-js">
   <head>
@@ -86,7 +88,9 @@
       crossorigin
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="stage/stage.css" />
     <script type="module" src="script.js"></script>
+    <script type="module" src="stage/stage.js"></script>
   </head>
   <body>
     <!-- Icons: Lucide (ISC), and the GitHub mark. -->
@@ -225,14 +229,6 @@
         <line x1="6" x2="6.01" y1="6" y2="6" />
         <line x1="6" x2="6.01" y1="18" y2="18" />
       </symbol>
-      <symbol id="i-sparkles" viewBox="0 0 24 24">
-        <path
-          d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"
-        />
-        <path d="M20 2v4" />
-        <path d="M22 4h-4" />
-        <circle cx="4" cy="20" r="2" />
-      </symbol>
       <symbol id="i-scale" viewBox="0 0 24 24">
         <path d="M12 3v18" />
         <path d="m19 8 3 8a5 5 0 0 1-6 0zV7" />
@@ -256,6 +252,10 @@
       <symbol id="i-copy" viewBox="0 0 24 24">
         <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
         <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      </symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24">
+        <rect x="14" y="4" width="4" height="16" rx="1" />
+        <rect x="6" y="4" width="4" height="16" rx="1" />
       </symbol>
       <symbol id="i-check" viewBox="0 0 24 24">
         <path d="M20 6 9 17l-5-5" />
@@ -335,7 +335,7 @@
         <div class="container hero-inner">
           <div class="hero-text">
             <p class="eyebrow">
-              <svg class="icon" aria-hidden="true"><use href="#i-sparkles" /></svg>
+              <svg class="icon" aria-hidden="true"><use href="#i-house" /></svg>
               Self-hosted · No account · Free and open source
             </p>
             <h1 id="hero-title">One remote for <span class="gradient-text">your whole home</span></h1>
@@ -364,36 +364,39 @@
 <span class="prompt" aria-hidden="true">$ </span>pnpm start</code></pre>
             </div>
           </div>
-          <figure class="hero-shot">
-            <div class="window">
-              <div class="window-bar" aria-hidden="true">
-                <span></span><span></span><span></span>
-                <p class="window-address">localhost:41080</p>
-              </div>
-              <a href="images/screenshots/desktop-tv.png" data-lightbox data-caption="The TV tab, on a computer">
-                <picture>
-                  <source srcset="images/screenshots/desktop-tv-dark.png" media="(prefers-color-scheme: dark)" />
-                  <img
-                    src="images/screenshots/desktop-tv.png"
-                    width="1440"
-                    height="900"
-                    fetchpriority="high"
-                    alt="The Remote's TV tab on a computer: the Selected TV, Living Room · TV, with a film playing and its seek bar, the keys, a D-pad and a number pad, Now Showing, Power, the volume, the TV's apps, and Watch & Listen with a NAS."
-                  />
-                </picture>
-              </a>
-            </div>
-            <picture class="hero-phone">
-              <source srcset="images/screenshots/phone-tv-dark.png" media="(prefers-color-scheme: dark)" />
-              <img src="images/screenshots/phone-tv.png" width="780" height="1688" alt="The same TV tab on a phone." />
-            </picture>
-            <figcaption>
-              <strong>The TV tab.</strong> On a computer and on a phone: the same Remote, from any browser at home.
-            </figcaption>
-          </figure>
         </div>
 
         <div class="container">
+          <figure class="hero-stage">
+            <div
+              class="stage-slot"
+              data-stage="hero"
+              role="img"
+              aria-label="The Remote's TV tab on a computer, and the same Remote on a phone. A film is tapped in Watch &amp; Listen on the phone, Sintel (2010).mkv from the NAS's Films; it plays on Living Room · TV from where it was stopped, and both Remotes show it in Now Playing, the position counting on each, until Stop on the phone stops it on both."
+            >
+              <picture>
+                <source srcset="images/screenshots/desktop-tv-dark.png" media="(prefers-color-scheme: dark)" />
+                <img
+                  src="images/screenshots/desktop-tv.png"
+                  width="1440"
+                  height="900"
+                  fetchpriority="high"
+                  alt="The Remote's TV tab on a computer: the Selected TV, Living Room · TV, with a film playing and its seek bar, the keys, a D-pad and a number pad, Now Showing, Power, the volume, the TV's apps, and Watch &amp; Listen with a NAS."
+                />
+              </picture>
+            </div>
+            <figcaption>
+              <button class="stage-pause" type="button" data-stage-pause="hero" aria-pressed="false" hidden>
+                <svg class="icon" aria-hidden="true"><use href="#i-pause" /></svg>
+                <span>Pause the animation</span>
+              </button>
+              <span>
+                <strong>Every Remote follows it.</strong> Start a film from your phone and the computer's Remote shows
+                it too: the same Hub, from any browser at home.
+              </span>
+            </figcaption>
+          </figure>
+
           <ul class="facts" aria-label="At a glance">
             <li>
               <svg class="icon" aria-hidden="true"><use href="#i-server" /></svg>
@@ -512,14 +515,21 @@
               </p>
             </li>
           </ol>
-          <div class="stage-track">
-            <p class="stage-track-title">The four Routes, cheapest first</p>
-            <ol class="stage-chips">
-              <li><span class="chip">Direct Play</span></li>
-              <li><span class="chip">Remux</span></li>
-              <li><span class="chip">Audio Conversion</span></li>
-              <li><span class="chip">Full Conversion</span></li>
-            </ol>
+          <div
+            class="stage-slot route-stage"
+            data-stage="route"
+            role="img"
+            aria-label="How the Hub picks a Route for Tears of Steel (2012).mkv. ffprobe reads its streams: HEVC 4K video and SRT subtitles, which the TV plays, and DTS 5.1 audio, which it can't. Of the Routes, cheapest first, Direct Play and Remux are ruled out, as the TV can't play DTS; Audio Conversion is taken, converting DTS to Dolby Digital; Full Conversion isn't needed. It plays on Living Room · TV."
+          >
+            <div class="stage-track">
+              <p class="stage-track-title">The four Routes, cheapest first</p>
+              <ol class="stage-chips">
+                <li><span class="chip">Direct Play</span></li>
+                <li><span class="chip">Remux</span></li>
+                <li><span class="chip">Audio Conversion</span></li>
+                <li><span class="chip">Full Conversion</span></li>
+              </ol>
+            </div>
           </div>
         </div>
       </section>
@@ -535,7 +545,69 @@
             </p>
           </div>
           <ul class="bento">
-            <li class="card card-feature card-wide">
+            <li class="tile tile-hero">
+              <div class="tile-copy">
+                <h3>Rooms on your own floor plan.</h3>
+                <p>
+                  Tap a Room for everything in it: its TVs, air conditioners, lights and heating, its Echos and Ring
+                  devices. Draw the plan, floor by floor, on your own image of your home.
+                </p>
+              </div>
+              <div
+                class="tile-picture stage-slot"
+                data-stage="rooms"
+                role="img"
+                aria-label="The Rooms tab: a floor plan of a house's ground floor, with the Living Room picked out, and what is in it: the TV, playing a film; the Aircon, cool, set to 21°; and a floor lamp, on at 30%."
+              ></div>
+            </li>
+            <li class="tile tile-stat">
+              <p class="tile-lead">WCAG 2.2 at Level</p>
+              <p class="tile-number">AA</p>
+              <p>
+                By keyboard and screen reader, in your device's light or dark, with six colour themes, and it installs
+                to a phone's home screen.
+              </p>
+            </li>
+            <li class="tile">
+              <div class="tile-copy">
+                <h3>Midea air conditioners.</h3>
+                <p>Mode, temperature, fan, swing, Eco, Turbo and Sleep, with the room and outdoor temperatures.</p>
+              </div>
+              <div
+                class="tile-picture stage-slot"
+                data-stage="aircon"
+                role="img"
+                aria-label="The Living Room's Aircon widget: Cool, its target temperature turned down to 21°."
+              ></div>
+            </li>
+            <li class="tile">
+              <div class="tile-copy">
+                <h3>Lepro lights and Light Scenes.</h3>
+                <p>
+                  A Room's Lights at once, and Light Scenes to save and recall. Tested against a fake Lepro Light, not
+                  yet a real one.
+                </p>
+              </div>
+              <div
+                class="tile-picture stage-slot"
+                data-stage="lights"
+                role="img"
+                aria-label="The Living Room's Lights: the Film night Light Scene recalled, and their brightness going down from 70% to 30%."
+              ></div>
+            </li>
+            <li class="tile tile-statement">
+              <svg class="icon" aria-hidden="true"><use href="#i-wifi" /></svg>
+              <p class="tile-big">Local first.</p>
+              <p>
+                TVs, air conditioners and lights are controlled over your home network, with no cloud once each is
+                added. Only Hive, Amazon and Ring need theirs.
+              </p>
+            </li>
+          </ul>
+
+          <h3 class="more-title">And the rest of the home</h3>
+          <ul class="more">
+            <li class="card card-feature">
               <span class="card-icon"
                 ><svg class="icon" aria-hidden="true"><use href="#i-tv" /></svg
               ></span>
@@ -547,7 +619,7 @@
                 says which app is in front.
               </p>
             </li>
-            <li class="card card-feature card-wide">
+            <li class="card card-feature">
               <span class="card-icon"
                 ><svg class="icon" aria-hidden="true"><use href="#i-film" /></svg
               ></span>
@@ -556,27 +628,6 @@
                 Browse your PC's or NAS's folders and play on the TV through its own Player: every format ffmpeg can
                 decode, with audio tracks, subtitles (sidecar files too), music with its cover art, a folder played as a
                 Queue with shuffle and repeat, and Resume Positions kept through restarts.
-              </p>
-            </li>
-            <li class="card card-feature">
-              <span class="card-icon"
-                ><svg class="icon" aria-hidden="true"><use href="#i-air-vent" /></svg
-              ></span>
-              <h3>Midea air conditioners</h3>
-              <p>
-                Power, mode, target temperature, fan speed, swing, Eco, Turbo and Sleep, with the room and outdoor
-                temperatures, controlled on your home network with no cloud once each is added.
-              </p>
-            </li>
-            <li class="card card-feature">
-              <span class="card-icon"
-                ><svg class="icon" aria-hidden="true"><use href="#i-lightbulb" /></svg
-              ></span>
-              <h3>Lepro lights and Light Scenes</h3>
-              <p>
-                On and off, brightness, white and colour, a Room's Lights at once, and Light Scenes to save and recall,
-                with a film Light Scene for each TV. Built and tested against a fake Lepro Light: not yet tried on a
-                real one.
               </p>
             </li>
             <li class="card card-feature">
@@ -618,27 +669,6 @@
               <p>
                 Every device on your home network, who made it and the ports it is open on, and the Bluetooth devices
                 near the Hub, each to name and put in a Room.
-              </p>
-            </li>
-            <li class="card card-feature card-wide">
-              <span class="card-icon"
-                ><svg class="icon" aria-hidden="true"><use href="#i-map" /></svg
-              ></span>
-              <h3>Rooms on your own floor plan</h3>
-              <p>
-                Tap a Room on the plan for everything in it: its TVs, air conditioners, lights and heating, its Echos
-                and Ring devices, and the other devices on the network. Draw the plan, floor by floor, on your own image
-                of your home.
-              </p>
-            </li>
-            <li class="card card-feature card-wide">
-              <span class="card-icon"
-                ><svg class="icon" aria-hidden="true"><use href="#i-accessibility" /></svg
-              ></span>
-              <h3>For everyone in the house</h3>
-              <p>
-                It meets WCAG 2.2 at Level AA, works by keyboard and screen reader, follows your device's light or dark
-                mode, has six colour themes, and installs to a phone's home screen.
               </p>
             </li>
           </ul>
@@ -1530,7 +1560,9 @@ pnpm start   <span class="comment"># builds the Remote and starts the Hub</span>
               </li>
               <li>
                 <strong>Motion</strong>: transitions are short, and smooth scrolling and animation are switched off when
-                your device asks for reduced motion.
+                your device asks for reduced motion. The illustrations of the app play only while they are on screen,
+                show a still frame instead when your device asks for reduced motion, and the one that repeats has a
+                button under it to pause it.
               </li>
               <li>
                 <strong>Zoom and reflow</strong>: the page reflows down to 320 pixels wide and at 400% zoom without
@@ -1557,8 +1589,8 @@ pnpm start   <span class="comment"># builds the Remote and starts the Hub</span>
                 arrow keys scroll it.
               </li>
               <li>
-                The screenshots are pictures of the app; their descriptions say what each shows, not every word in it.
-                The app itself is the accessible version.
+                The screenshots and illustrations are pictures of the app; their descriptions say what each shows, not
+                every word in it. The app itself is the accessible version.
               </li>
             </ul>
 

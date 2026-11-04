@@ -254,7 +254,7 @@ pre:focus-visible {
 }
 
 .visually-hidden {
-  position: absolute !important;
+  position: absolute;
   width: 1px;
   height: 1px;
   padding: 0;
@@ -595,15 +595,25 @@ pre:focus-visible {
   align-items: center;
 }
 
-@media (min-width: 64rem) {
-  .hero-inner {
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-    gap: 3.5rem;
-  }
-}
-
 .hero-text {
   min-width: 0;
+  max-width: 52rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-text .lead,
+.hero-text .terminal-mini {
+  margin-inline: auto;
+  text-align: left;
+}
+
+.hero-text .lead {
+  text-align: center;
+}
+
+.hero-actions {
+  justify-content: center;
 }
 
 .eyebrow {
@@ -670,108 +680,77 @@ pre:focus-visible {
   font-size: 0.8125rem;
 }
 
-/* The TV tab in a browser window, with the same tab on a phone over its
-   corner. */
-.hero-shot {
-  position: relative;
-  margin: 0;
-  min-width: 0;
-  padding: 0 clamp(1rem, 5vw, 3.5rem) 0 0;
+/* The hero's illustration (stage/scenes/hero.tsx): the TV tab on a computer
+   and a phone, at its design size where the page is wide enough, and its
+   compact design on a phone. Without JavaScript, the TV tab's screenshot. */
+.hero-stage {
+  max-width: 65rem;
+  margin: 3.5rem auto 0;
 }
 
-.hero-shot::before {
-  content: "";
-  position: absolute;
-  inset: 8% 0 2%;
-  z-index: -1;
-  background: var(--gradient);
-  filter: blur(70px);
-  opacity: 0.28;
-  border-radius: 50%;
-}
-
-.window {
-  border-radius: var(--radius-lg);
+.hero-stage > .stage-slot > picture img {
   border: 1px solid var(--border);
-  background: var(--surface);
+  border-radius: 1.5rem;
   box-shadow: var(--shadow-lg);
-  overflow: hidden;
 }
 
-.window-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.65rem 0.9rem;
-  background: var(--bg-alt);
-  border-bottom: 1px solid var(--border);
-}
-
-.window-bar span {
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 50%;
-  background: var(--border-strong);
-  opacity: 0.55;
-}
-
-.window-address {
-  flex: 1;
-  margin: 0 0 0 0.75rem;
-  max-width: 16rem;
-  padding: 0.1rem 0.75rem;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.window a {
-  display: block;
-}
-
-.window a:focus-visible {
-  outline-offset: -4px;
-}
-
-.hero-phone {
-  position: absolute;
-  right: 0;
-  bottom: 2.5rem;
-  width: clamp(5.5rem, 22%, 10.5rem);
-  padding: 0.3rem;
-  border-radius: 1.4rem;
-  background: #0f172a;
-  box-shadow:
-    0 0 0 1px rgb(255 255 255 / 10%),
-    var(--shadow-lg);
-}
-
-.hero-phone img {
-  border-radius: 1.15rem;
-}
-
-.hero-shot figcaption {
+.hero-stage figcaption {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
   margin-top: 1rem;
-  /* Clear of the phone, which overhangs the window's bottom right. */
-  padding-right: calc(clamp(5.5rem, 22%, 10.5rem) + 1rem);
   font-size: 0.9rem;
   color: var(--muted);
+  text-align: center;
 }
 
-.hero-shot figcaption strong {
+.stage-pause {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stage-pause[hidden] {
+  display: none;
+}
+
+.stage-pause .icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.stage-pause[aria-pressed="true"] .icon {
+  display: none;
+}
+
+.hero-stage figcaption strong {
   color: var(--text);
   font-weight: 700;
 }
 
+/* Where an illustration is drawn. Without JavaScript one with nothing in it
+   to show instead takes no room. */
+.stage-slot {
+  min-width: 0;
+}
+
+.no-js .stage-slot:empty {
+  display: none;
+}
+
 .facts {
   list-style: none;
-  margin: 4rem 0 0;
+  margin: 3.5rem 0 0;
   padding: 0;
   display: grid;
   gap: 1px;
@@ -1021,6 +1000,10 @@ pre:focus-visible {
   color: var(--muted);
 }
 
+.route-stage {
+  margin-top: 2rem;
+}
+
 .stage-track {
   display: flex;
   flex-wrap: wrap;
@@ -1108,7 +1091,16 @@ pre:focus-visible {
   padding: 0;
   display: grid;
   gap: 1.25rem;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+}
+
+@media (min-width: 48rem) {
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tile-hero {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (min-width: 64rem) {
@@ -1120,9 +1112,100 @@ pre:focus-visible {
     grid-column: span 2;
   }
 
-  .bento > .card-wide {
-    grid-column: span 3;
+  .bento > .tile-hero {
+    grid-column: span 4;
   }
+}
+
+/* A tile: its copy on top, in the page's type, and its picture under it, edge
+   to edge and cut by the tile's foot. */
+.tile {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.tile-copy {
+  padding: 1.5rem 1.5rem 1.25rem;
+}
+
+.tile h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.015em;
+}
+
+.tile p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.975rem;
+}
+
+.tile-picture {
+  margin-top: auto;
+}
+
+/* The two type tiles, calm between the pictures. */
+.tile-statement,
+.tile-stat {
+  gap: 0.6rem;
+  padding: 1.5rem;
+}
+
+.tile-statement {
+  background:
+    radial-gradient(24rem 16rem at 100% 0%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 70%),
+    var(--surface);
+}
+
+.tile-statement > .icon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--primary);
+}
+
+.tile .tile-big {
+  color: var(--text);
+  font-size: clamp(1.9rem, 1.4rem + 1.4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.tile .tile-lead {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.tile .tile-number {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(5rem, 3rem + 6vw, 8.5rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  white-space: nowrap;
+}
+
+.more-title {
+  margin: 3.5rem 0 1.25rem;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+}
+
+.more {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
 }
 
 .card-feature {
@@ -1148,12 +1231,6 @@ pre:focus-visible {
   margin: 0;
   color: var(--muted);
   font-size: 0.975rem;
-}
-
-.card-wide {
-  background:
-    radial-gradient(28rem 14rem at 100% 0%, color-mix(in srgb, var(--primary) 9%, transparent), transparent 70%),
-    var(--surface);
 }
 
 /* ---------- Tabs (script.js) ---------- */
@@ -2127,9 +2204,9 @@ thead th {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
 
   .card-feature:hover,

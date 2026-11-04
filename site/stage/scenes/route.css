@@ -1,0 +1,263 @@
+/* The Route: a Media File as ffprobe reads it, a line from the stream that
+   decides, and the Routes it is tried against, on the website's one ground. */
+.mc-route {
+  & .ss-stage {
+    --gutter: 40px;
+    overflow: hidden;
+    border-radius: 24px;
+    background: var(--ss-well);
+    color: var(--ss-text-strong);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .mc-route__file,
+  .mc-route__routes {
+    position: absolute;
+    width: 384px;
+    padding: 18px 18px 22px;
+    border-radius: var(--mc-widget-radius);
+    background: var(--ss-surface);
+    box-shadow: var(--ss-shadow-ground);
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1),
+      transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .mc-route__file[data-in],
+  .mc-route__routes[data-in] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mc-route__file {
+    top: 92px;
+    left: 88px;
+  }
+
+  .mc-route__routes {
+    top: var(--gutter);
+    right: 88px;
+  }
+
+  .mc-route__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .mc-route__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--ss-accent-soft);
+    color: var(--ss-accent-text);
+  }
+
+  .mc-route__title {
+    display: block;
+    font-size: 15px;
+    font-weight: 750;
+  }
+
+  .mc-route__sub,
+  .mc-route__label {
+    display: block;
+    margin-top: 2px;
+    color: var(--ss-text);
+    font-size: 12px;
+  }
+
+  .mc-route__label {
+    margin: 0 0 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mc-route__row,
+  .mc-route__route {
+    display: grid;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    border-radius: var(--ss-radius-md);
+  }
+
+  .mc-route__row {
+    grid-template-columns: 84px minmax(0, 1fr) 20px;
+    height: 40px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
+      transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .mc-route__row + .mc-route__row {
+    margin-top: 4px;
+  }
+
+  .mc-route__row[data-in] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mc-route__row:nth-of-type(odd) {
+    background: var(--ss-canvas);
+  }
+
+  .mc-route__kind {
+    color: var(--ss-text);
+  }
+
+  .mc-route__codec {
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mc-route__route {
+    grid-template-columns: 128px minmax(0, 1fr) 20px;
+    height: 46px;
+    border: 1px solid transparent;
+    transition:
+      background 0.4s ease,
+      border-color 0.4s ease,
+      color 0.4s ease;
+  }
+
+  .mc-route__route + .mc-route__route {
+    margin-top: 4px;
+  }
+
+  .mc-route__name {
+    font-weight: 700;
+  }
+
+  .mc-route__why {
+    color: var(--ss-text);
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .mc-route__why[data-in] {
+    opacity: 1;
+  }
+
+  .mc-route__route[data-fate="ruled-out"] .mc-route__name,
+  .mc-route__route[data-fate="unneeded"] .mc-route__name {
+    color: var(--ss-text);
+    font-weight: 600;
+  }
+
+  .mc-route__route[data-fate="taken"] {
+    border-color: color-mix(in srgb, var(--ss-accent) 45%, transparent);
+    background: var(--ss-accent-soft);
+  }
+
+  .mc-route__route[data-fate="taken"] .mc-route__name,
+  .mc-route__route[data-fate="taken"] .mc-route__why {
+    color: var(--ss-accent-text);
+  }
+
+  .mc-mark {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--ss-fill);
+    color: var(--ss-icon-faint);
+    transition:
+      background 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .mc-mark[data-verdict="yes"] {
+    background: var(--ss-accent);
+    color: var(--ss-surface);
+  }
+
+  .mc-mark[data-verdict="no"] {
+    background: var(--ss-danger-soft);
+    color: var(--ss-danger-text);
+  }
+
+  .mc-route__result {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 0 12px;
+    color: var(--ss-accent-text);
+    font-weight: 700;
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+  }
+
+  .mc-route__result[data-in] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mc-route__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ss-accent);
+  }
+
+  /* Narrow: the file over its Routes, each the column's width. */
+  & .ss-stage[data-layout="compact"] {
+    --gutter: 16px;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-route__file,
+  & .ss-stage[data-layout="compact"] .mc-route__routes {
+    right: var(--gutter);
+    left: var(--gutter);
+    width: auto;
+    padding: 16px;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-route__file {
+    top: var(--gutter);
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-route__routes {
+    top: 238px;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-route__route {
+    grid-template-columns: minmax(0, 1fr) 20px;
+    grid-template-rows: auto auto;
+    align-content: center;
+    height: 58px;
+    row-gap: 3px;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-route__why {
+    grid-row: 2;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-route__route .mc-mark {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-route__row {
+    grid-template-columns: 76px minmax(0, 1fr) 20px;
+  }
+}

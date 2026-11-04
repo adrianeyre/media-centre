@@ -1,14 +1,14 @@
 # media-centre — Product Requirements Document
 
-|                |                                                                                                       |
-| -------------- | ----------------------------------------------------------------------------------------------------- |
-| **Product**    | media-centre                                                                                          |
-| **Repository** | `adrianeyre/temp` (to become [`adrianeyre/media-centre`](https://github.com/adrianeyre/media-centre)) |
-| **Status**     | Draft                                                                                                 |
-| **Visibility** | Private during development                                                                            |
-| **Date**       | 2026-10-20                                                                                            |
-| **Glossary**   | [`GLOSSARY.md`](../../GLOSSARY.md)                                                                    |
-| **Decisions**  | [`docs/architectural-decision-record/`](../architectural-decision-record/)                            |
+|                |                                                                            |
+| -------------- | -------------------------------------------------------------------------- |
+| **Product**    | media-centre                                                               |
+| **Repository** | [`adrianeyre/media-centre`](https://github.com/adrianeyre/media-centre)    |
+| **Status**     | Draft                                                                      |
+| **Visibility** | Public                                                                     |
+| **Date**       | 2026-10-20                                                                 |
+| **Glossary**   | [`GLOSSARY.md`](../../GLOSSARY.md)                                         |
+| **Decisions**  | [`docs/architectural-decision-record/`](../architectural-decision-record/) |
 
 ## 1. Summary
 

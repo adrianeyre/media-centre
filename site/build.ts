@@ -1,10 +1,12 @@
 // Assembles the project website (GitHub Pages) in `site/dist/`: the page, its
-// stylesheet, its script (types stripped) and its font from `site/`, the
-// screenshots from `docs/images/`, and the icons from the Remote, copied rather
-// than kept twice in Git. It also writes `sitemap.xml` and `robots.txt` for the
-// site's address. `.github/workflows/pages.yml` runs it and publishes
-// `site/dist/`; run it yourself with `pnpm site:build` (it needs no install),
-// then serve `site/dist/`.
+// stylesheet, its script (types stripped) and its font from `site/`, its
+// product illustrations from `site/stage/dist/`, the screenshots from
+// `docs/images/`, and the icons from the Remote, copied rather than kept twice
+// in Git. It also writes `CNAME`, `sitemap.xml` and `robots.txt` for the site's
+// address. `.github/workflows/pages.yml` runs `pnpm site:build`, which builds
+// the illustrations (`pnpm --filter @media-centre/site scenes`) and then runs
+// this, and publishes `site/dist/`; run it yourself the same way, then serve
+// `site/dist/`.
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { stripTypeScriptTypes } from "node:module";
 import { join } from "node:path";
@@ -14,16 +16,16 @@ export const repositoryUrl = "https://github.com/adrianeyre/media-centre";
 
 /**
  * The website's own address, with no trailing slash, for its canonical link,
- * link previews, sitemap and robots.txt. Every other URL in the page is
- * relative, so the page works under this project page's `/media-centre/` path.
- *
- * To move it to a custom domain later: set this to `https://<the domain>`,
- * write a `CNAME` file holding the bare domain into `site/dist/` below (as
- * `writeFileSync(join(output, "CNAME"), "<the domain>\n")`), add the DNS record
- * GitHub Pages asks for (a CNAME to `adrianeyre.github.io`), and set the
- * domain in the repository's Pages settings.
+ * link previews, sitemap and robots.txt: the custom domain set in the
+ * repository's Pages settings, which a `CNAME` record at the domain points at
+ * `adrianeyre.github.io`. The build writes the `CNAME` file GitHub Pages reads
+ * the domain from. Every other URL in the page is relative, so the page still
+ * works at the project page's `/media-centre/` path.
  */
-export const siteUrl = "https://adrianeyre.github.io/media-centre";
+export const siteUrl = "https://media-centre.adrianeyre.co.uk";
+
+/** The bare domain of {@link siteUrl}, for the `CNAME` file. */
+const siteDomain = new URL(siteUrl).hostname;
 
 const root = join(import.meta.dirname, "..");
 const source = import.meta.dirname;
@@ -52,11 +54,19 @@ const page = readFileSync(join(source, "index.html"), "utf8").replaceAll(
 writeFileSync(join(output, "index.html"), page);
 cpSync(join(source, "styles.css"), join(output, "styles.css"));
 // The page's script, as the browser runs it: its types stripped, as Node
-// strips them, so the build still needs no install.
+// strips them.
 writeFileSync(join(output, "script.js"), stripTypeScriptTypes(readFileSync(join(source, "script.mts"), "utf8")));
 cpSync(join(source, "fonts"), join(output, "fonts"), { recursive: true });
+// The illustrations, built by Vite from site/stage/ (see its vite.config.ts).
+const scenes = join(source, "stage/dist");
+if (!existsSync(join(scenes, "stage.js"))) {
+  throw new Error("site/stage/dist/ has not been built: run `pnpm site:build`, which builds it first");
+}
+cpSync(scenes, join(output, "stage"), { recursive: true });
 
 cpSync(join(root, "docs/images/screenshots"), join(output, "images/screenshots"), { recursive: true });
+// The floor plan the Rooms illustration draws on.
+cpSync(join(root, "docs/images/floor-plan.png"), join(output, "images/floor-plan.png"));
 cpSync(join(root, "packages/remote/brand/icon.svg"), join(output, "brand/icon.svg"));
 for (const file of [
   "favicon.ico",
@@ -69,8 +79,15 @@ for (const file of [
   cpSync(join(root, "packages/remote/public", file), join(output, file));
 }
 
-// For search engines. A crawler reads robots.txt only at a domain's root, so
-// it counts once the site has a custom domain; the sitemap is named in it.
+// The custom domain, which GitHub Pages reads from the published files.
+writeFileSync(
+  join(output, "CNAME"),
+  `${siteDomain}
+`,
+);
+
+// For search engines, at the domain's root, where a crawler reads robots.txt;
+// the sitemap is named in it.
 const today = new Date().toISOString().slice(0, 10);
 writeFileSync(
   join(output, "sitemap.xml"),
@@ -94,7 +111,7 @@ if (missing.length > 0) {
   throw new Error(`site/index.html names files the build has not got: ${[...new Set(missing)].join(", ")}`);
 }
 if (/(?:src|href)="\/(?!\/)/.test(page)) {
-  throw new Error("site/index.html has a root-absolute URL, which breaks under the project page's path");
+  throw new Error("site/index.html has a root-absolute URL, which breaks at the project page's path");
 }
 
 console.log(`Built the website in ${output}`);

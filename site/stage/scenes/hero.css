@@ -1,0 +1,556 @@
+/* The hero: a device pair. The computer's window is pinned a gutter from the
+   top and left and runs off the bottom; the phone stands a gutter in from the
+   right, straddling the window's edge over its Apps widget. */
+.mc-hero {
+  & .ss-stage {
+    --gutter: 40px;
+    overflow: hidden;
+    border-radius: 24px;
+    background: var(--ss-well);
+  }
+
+  /* The brand's green and teal, faint, lighting the ground from behind the
+     phone, as the website's own hero is lit. */
+  .mc-hero__wash {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(38% 60% at 88% 18%, color-mix(in srgb, var(--ss-accent-2) 16%, transparent), transparent 70%),
+      radial-gradient(40% 55% at 8% 100%, color-mix(in srgb, var(--ss-accent) 12%, transparent), transparent 70%);
+  }
+
+  .mc-hero__window {
+    position: absolute;
+    top: var(--gutter);
+    left: var(--gutter);
+    width: 800px;
+    height: 580px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .mc-hero__window .ss-window__body {
+    background: var(--ss-canvas);
+  }
+
+  .mc-hero__phone {
+    position: absolute;
+    top: 76px;
+    right: var(--gutter);
+    box-shadow:
+      var(--ss-shadow-satellite),
+      0 30px 50px -20px rgb(15 23 42 / 35%);
+  }
+
+  /* ---- The Remote on the computer ---- */
+
+  .mc-app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    color: var(--ss-text-strong);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .mc-appbar {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--ss-line);
+    background: var(--ss-surface);
+  }
+
+  .mc-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+  }
+
+  .mc-online {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 22px;
+    padding: 0 10px;
+    border: 1px solid var(--ss-line);
+    border-radius: var(--ss-radius-pill);
+  }
+
+  .mc-online__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ss-accent);
+  }
+
+  .mc-app__body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .mc-rail {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 2px;
+    width: 150px;
+    padding: 12px 10px;
+    border-right: 1px solid var(--ss-line);
+    background: var(--ss-surface);
+    color: var(--ss-icon);
+  }
+
+  .mc-rail__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: var(--ss-radius-md);
+  }
+
+  .mc-rail__item[data-on] {
+    background: var(--ss-accent-soft);
+    color: var(--ss-accent-text);
+    font-weight: 700;
+    box-shadow: inset 3px 0 0 var(--ss-accent);
+  }
+
+  .mc-tv {
+    flex: 1;
+    min-width: 0;
+    padding: 14px 16px;
+  }
+
+  .mc-tv__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .mc-tv__title {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .mc-select {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--ss-line);
+    border-radius: var(--ss-radius-md);
+    background: var(--ss-surface);
+    color: var(--ss-text-strong);
+  }
+
+  .mc-select strong {
+    font-weight: 700;
+  }
+
+  .mc-faint {
+    color: var(--ss-text);
+    font-weight: 500;
+  }
+
+  .mc-tv__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 196px;
+    align-items: start;
+    gap: 12px;
+  }
+
+  /* ---- Now playing: the widget the story is about ---- */
+
+  .mc-playing {
+    grid-column: 1;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .mc-playing[data-on] {
+    border-color: color-mix(in srgb, var(--ss-accent) 55%, var(--ss-line));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ss-accent) 30%, transparent);
+  }
+
+  .mc-playing__title {
+    margin: 8px 0 10px;
+    font-size: 15px;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+    line-height: 20px;
+  }
+
+  .mc-seek {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: var(--ss-text);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mc-seek__time {
+    flex: none;
+    min-width: 30px;
+  }
+
+  .mc-seek__time:last-child {
+    text-align: right;
+  }
+
+  .mc-seek__track {
+    position: relative;
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--ss-fill);
+  }
+
+  .mc-seek__fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+    background: var(--ss-accent);
+    transition: width 1s linear;
+  }
+
+  .mc-playing:not([data-on]) .mc-seek__fill,
+  .mc-playing:not([data-on]) .mc-seek__knob {
+    transition-duration: 0.6s;
+    transition-timing-function: cubic-bezier(0.45, 0, 0.1, 1);
+  }
+
+  .mc-seek__knob {
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border: 3px solid var(--ss-surface);
+    border-radius: 50%;
+    background: var(--ss-accent);
+    box-shadow: 0 0 0 1px var(--ss-line);
+    transform: translate(-50%, -50%);
+    transition: left 1s linear;
+  }
+
+  .mc-transport {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .mc-skip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mc-key--play {
+    background: var(--ss-accent);
+    color: var(--ss-surface);
+    transition: background 0.3s ease;
+  }
+
+  .mc-playing:not([data-on]) .mc-key--play {
+    background: color-mix(in srgb, var(--ss-accent) 70%, var(--ss-surface));
+  }
+
+  /* ---- Filler widgets ---- */
+
+  .mc-apps {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .mc-apps .mc-widget__head,
+  .mc-keys .mc-widget__head {
+    margin-bottom: 12px;
+  }
+
+  .mc-apps__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 52px;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .mc-apps__app {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    height: 38px;
+    padding: 0 10px;
+  }
+
+  .mc-apps__close {
+    height: 38px;
+  }
+
+  .mc-keys {
+    grid-column: 1;
+  }
+
+  .mc-keys__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .mc-keys__named {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .mc-dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .mc-dpad .mc-key {
+    height: 100%;
+  }
+
+  .mc-dpad__up {
+    grid-area: 1 / 2;
+  }
+  .mc-dpad__left {
+    grid-area: 2 / 1;
+  }
+  .mc-dpad__right {
+    grid-area: 2 / 3;
+  }
+  .mc-dpad__down {
+    grid-area: 3 / 2;
+  }
+
+  .mc-dpad__ok {
+    display: grid;
+    grid-area: 2 / 2;
+    place-items: center;
+    border: 2px solid var(--ss-accent);
+    border-radius: 50%;
+    background: var(--ss-accent-soft);
+    color: var(--ss-accent-text);
+    font-size: 13px;
+    font-weight: 750;
+  }
+
+  /* ---- The Remote on the phone, in iOS points ---- */
+
+  .mc-phone {
+    position: absolute;
+    inset: 0;
+    padding-top: 54px;
+    background: var(--ss-canvas);
+    color: var(--ss-text-strong);
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .mc-phone__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    margin-bottom: 8px;
+    padding: 0 32px;
+  }
+
+  .mc-brand--phone {
+    gap: 10px;
+    font-size: 19px;
+  }
+
+  .mc-phone__cog {
+    color: var(--ss-icon);
+  }
+
+  .mc-phone__widget {
+    margin: 0 16px 12px;
+    padding: 14px 16px 16px;
+    border-radius: 20px;
+  }
+
+  .mc-phone .mc-label {
+    font-size: 14px;
+  }
+
+  .mc-phone__film {
+    margin: 10px 0 12px;
+    font-size: 18px;
+    font-weight: 750;
+  }
+
+  .mc-seek--phone {
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .mc-seek--phone .mc-seek__fill {
+    background: var(--ss-accent);
+  }
+
+  .mc-phone__keys {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 72px;
+    gap: 8px;
+  }
+
+  .mc-phone__keys .mc-key {
+    height: 48px;
+    border-radius: 14px;
+  }
+
+  .mc-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 10px 0 6px;
+    color: var(--ss-text);
+    font-size: 15px;
+  }
+
+  .mc-crumbs strong {
+    color: var(--ss-text-strong);
+    font-weight: 700;
+  }
+
+  .mc-files {
+    margin: 0 -8px;
+  }
+
+  .mc-file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px 10px 8px;
+    border-radius: 14px;
+    transition:
+      background 0.25s ease,
+      transform 0.15s ease;
+    will-change: transform;
+  }
+
+  .mc-file[data-pressed] {
+    background: var(--ss-ink-2);
+    transform: scale(0.985);
+  }
+
+  .mc-file[data-on] {
+    background: var(--ss-accent-soft);
+  }
+
+  .mc-file__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--ss-fill);
+    color: var(--ss-icon);
+  }
+
+  .mc-file[data-on] .mc-file__icon {
+    background: var(--ss-accent);
+    color: var(--ss-surface);
+  }
+
+  .mc-file__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 42px;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .mc-file__name {
+    overflow: hidden;
+    font-size: 16px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mc-file__text--filler {
+    gap: 10px;
+  }
+
+  .mc-file__meta {
+    color: var(--ss-text);
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mc-file__state {
+    flex: none;
+    color: var(--ss-icon);
+  }
+
+  .mc-file__badge {
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-accent);
+    color: var(--ss-surface);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ---- Narrow: the window is cropped to its Now playing widget, and the
+     phone stands under it, at a size its words can be read ---- */
+
+  & .ss-stage[data-layout="compact"] {
+    --gutter: 16px;
+  }
+
+  /* Cropped to a square and faded out at its foot, under the phone. */
+  & .ss-stage[data-layout="compact"] .mc-hero__window {
+    width: 326px;
+    height: 360px;
+    mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-rail,
+  & .ss-stage[data-layout="compact"] .mc-apps,
+  & .ss-stage[data-layout="compact"] .mc-keys,
+  & .ss-stage[data-layout="compact"] .mc-online,
+  & .ss-stage[data-layout="compact"] .mc-select .mc-faint {
+    display: none;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-tv__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-hero__phone {
+    top: 348px;
+    right: var(--gutter);
+  }
+}

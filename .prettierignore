@@ -6,3 +6,5 @@ test-results/
 playwright-report/
 .sandcastle/
 CHANGELOG.md
+# The Stageshow kit, vendored as it is (site/stage/kit/README.md).
+site/stage/kit/

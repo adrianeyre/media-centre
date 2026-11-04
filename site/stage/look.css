@@ -1,0 +1,130 @@
+/* The Remote's look, as the kit's tokens: its Evergreen accent on slate
+   neutrals, its radii and its typeface (packages/remote/src/style.css). Every
+   scene on the website wears it, in light and in dark, which the page's
+   colour scheme picks (main.tsx). */
+
+.mc-look .ss-stage {
+  --ss-canvas: #f3f7f5;
+  --ss-surface: #ffffff;
+  --ss-chrome: #ffffff;
+  --ss-raised: #ffffff;
+  --ss-well: #e8eef3;
+  --ss-fill: #e6ebf2;
+  --ss-ink-1: rgb(15 23 42 / 4%);
+  --ss-ink-2: rgb(15 23 42 / 6%);
+  --ss-ink-3: rgb(15 23 42 / 8%);
+  --ss-ink-4: rgb(15 23 42 / 11%);
+  --ss-ink-5: rgb(15 23 42 / 16%);
+  --ss-line: #dde4ee;
+  --ss-line-faint: #eef2f7;
+  --ss-text-strong: #0f172a;
+  --ss-text: #475569;
+  --ss-text-faint: #64748b;
+  --ss-icon: #475569;
+  --ss-icon-faint: #94a3b8;
+  --ss-accent: #15803d;
+  --ss-accent-2: #0f766e;
+  --ss-accent-soft: #dcfce7;
+  --ss-accent-text: #166534;
+  --ss-success: #15803d;
+  --ss-success-soft: #dcfce7;
+  --ss-success-text: #166534;
+  --ss-danger: #b91c1c;
+  --ss-danger-soft: #fee2e2;
+  --ss-danger-text: #b91c1c;
+  --ss-font: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ss-radius-sm: 8px;
+  --ss-radius-md: 10px;
+  --ss-radius-lg: 14px;
+  --ss-radius-window: 14px;
+  --ss-control: 36px;
+  --ss-shadow-hero:
+    0 0 0 1px rgb(15 23 42 / 7%), 0 30px 60px -12px rgb(15 23 42 / 22%), 0 18px 36px -18px rgb(15 23 42 / 26%);
+  --ss-shadow-satellite:
+    0 0 0 1px rgb(15 23 42 / 5%), 0 14px 32px -8px rgb(15 23 42 / 26%), 0 4px 10px -4px rgb(15 23 42 / 12%);
+  --ss-shadow-card: 0 1px 2px rgb(15 23 42 / 5%);
+
+  /* The Remote's widget: a white card on a hairline, its title in small caps. */
+  --mc-widget-radius: 14px;
+}
+
+.mc-look .ss-stage[data-theme="dark"] {
+  --ss-canvas: #0b1222;
+  --ss-surface: #101828;
+  --ss-chrome: #101828;
+  --ss-raised: #18233a;
+  --ss-well: #060a14;
+  --ss-fill: #18233a;
+  --ss-ink-1: rgb(241 245 249 / 5%);
+  --ss-ink-2: rgb(241 245 249 / 8%);
+  --ss-ink-3: rgb(241 245 249 / 11%);
+  --ss-ink-4: rgb(241 245 249 / 14%);
+  --ss-ink-5: rgb(241 245 249 / 20%);
+  --ss-line: #24304a;
+  --ss-line-faint: #1a2438;
+  --ss-text-strong: #f1f5f9;
+  --ss-text: #a3b1c6;
+  --ss-text-faint: #7383a3;
+  --ss-icon: #a3b1c6;
+  --ss-icon-faint: #475569;
+  --ss-accent: #4ade80;
+  --ss-accent-2: #2dd4bf;
+  --ss-accent-soft: #12331f;
+  --ss-accent-text: #86efac;
+  --ss-success: #4ade80;
+  --ss-success-soft: #12331f;
+  --ss-success-text: #86efac;
+  --ss-danger: #fca5a5;
+  --ss-danger-soft: #3b1418;
+  --ss-danger-text: #fca5a5;
+  --ss-shadow-hero: 0 0 0 1px rgb(241 245 249 / 8%), 0 30px 60px -12px rgb(0 0 0 / 70%);
+  --ss-shadow-satellite:
+    0 0 0 1px rgb(241 245 249 / 10%), 0 14px 32px -8px rgb(0 0 0 / 75%), 0 4px 10px -4px rgb(0 0 0 / 50%);
+  --ss-shadow-card: 0 0 0 1px rgb(241 245 249 / 5%);
+}
+
+/* A Remote widget, as the TV tab draws it. */
+.mc-look .mc-widget {
+  position: relative;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--ss-line);
+  border-radius: var(--mc-widget-radius);
+  background: var(--ss-surface);
+}
+
+.mc-look .mc-widget__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 18px;
+}
+
+.mc-look .mc-label {
+  color: var(--ss-text);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.mc-look .mc-grip {
+  flex: none;
+  color: var(--ss-icon-faint);
+}
+
+/* The Remote's key: a quiet raised button on the canvas. */
+.mc-look .mc-key {
+  display: grid;
+  flex: none;
+  place-items: center;
+  height: 34px;
+  border-radius: var(--ss-radius-md);
+  background: var(--ss-fill);
+  color: var(--ss-text-strong);
+}
+
+.mc-look .mc-key svg {
+  display: block;
+}
