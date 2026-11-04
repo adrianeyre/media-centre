@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/adrianeyre/media-centre/compare/v1.0.0...v1.1.0) (2026-11-04)
+
+
+### Features
+
+* **site:** overhaul the website with Stageshow illustrations ([439f8d7](https://github.com/adrianeyre/media-centre/commit/439f8d7cca899ffe761bf7b6d21018abe3bde4f0))
+
 # 1.0.0 (2026-10-26)
 
 

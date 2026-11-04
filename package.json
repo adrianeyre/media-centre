@@ -1,6 +1,6 @@
 {
   "name": "media-centre",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "One home-network app to control your TVs, air conditioners and lights by room, and to play media from your PC or NAS on your TVs.",
   "license": "ISC",
