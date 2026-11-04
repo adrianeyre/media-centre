@@ -4,7 +4,7 @@
 
 **One remote for your whole home.** Control your TVs, air conditioners, lights, heating, Echo and Ring devices room by room, and play the films, shows and music on your PC or NAS on any TV, from any phone, tablet or computer on your home network. It runs on your own Hub, with no account.
 
-https://github.com/adrianeyre/media-centre
+**Website:** [media-centre.adrianeyre.co.uk](https://media-centre.adrianeyre.co.uk) · **Code:** [github.com/adrianeyre/media-centre](https://github.com/adrianeyre/media-centre)
 
 - **The Hub** is the always-on process, on a PC or in Docker on a NAS, that serves the Remote, controls every Appliance and serves Media Files to the Player.
 - **The Remote** is the web app you use from any phone, tablet or computer on the home network: a tab each for the TVs, air conditioners, lights, heating, the network, Amazon Echos, Ring doorbells and Rooms, and Settings. It meets WCAG 2.2 at Level AA, in light and dark, and installs to a home screen.
@@ -12,7 +12,7 @@ https://github.com/adrianeyre/media-centre
 
 ## Screenshots
 
-_All screenshots show demo Rooms and the project's fake Appliances, not a real home. `pnpm screenshots` takes them again._
+_All screenshots show demo Rooms and the project's fake Appliances, not a real home. `pnpm screenshots` takes them again, in Docker. The [website](https://media-centre.adrianeyre.co.uk) shows the same tabs, and illustrations of the Remote at work._
 
 ![The TV tab on a computer](docs/images/screenshots/desktop-tv.png)
 
@@ -65,6 +65,15 @@ pnpm start        # builds the Remote and starts the Hub on http://localhost:410
 ```
 
 Then open http://localhost:41080 in a browser. To run the Hub in Docker on a NAS, see [Getting started](docs/guides/getting-started.md#running-the-hub-on-a-nas).
+
+## The website
+
+The project's website, [media-centre.adrianeyre.co.uk](https://media-centre.adrianeyre.co.uk), is [`site/`](site/): one static page, published to GitHub Pages by [`.github/workflows/pages.yml`](.github/workflows/pages.yml) when it changes on `main`. Its illustrations of the Remote, the hero and the feature tiles, are drawn in React with the [Stageshow](https://github.com/benjitaylor/skills/tree/main/stageshow) kit, in [`site/stage/`](site/stage/), in the Remote's own colours, light and dark; without JavaScript the page shows the screenshots instead.
+
+```bash
+pnpm site:build                                # builds the illustrations, then the website, in site/dist/
+pnpm --filter @media-centre/site scenes:dev    # every illustration on one page, while drawing them
+```
 
 ## Documentation
 

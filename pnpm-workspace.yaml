@@ -1,6 +1,8 @@
 # The Hub, the Remote, the Player and the message types they share (PRD NFR-1).
 packages:
   - packages/*
+  # The website: its illustrations are drawn with React (site/stage/).
+  - site
 
 # tsx depends on esbuild, whose postinstall fetches its platform binary.
 allowBuilds:
@@ -23,3 +25,4 @@ minimumReleaseAgeExclude:
   - "@typescript-eslint/utils@8.72.0"
   - "@typescript-eslint/visitor-keys@8.72.0"
   - typescript-eslint@8.72.0
+  - lucide-react@1.67.0

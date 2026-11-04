@@ -1,0 +1,277 @@
+/* The feature grid's pictures: each fills its tile edge to edge, on the
+   tile's own ground, the widget pinned a gutter from the top and sides and
+   running off the bottom. */
+.mc-tile {
+  & .ss-stage {
+    --gutter: 24px;
+    overflow: hidden;
+    background: var(--ss-well);
+    color: var(--ss-text-strong);
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .mc-tile__card {
+    position: absolute;
+    top: var(--gutter);
+    right: var(--gutter);
+    left: var(--gutter);
+    height: 260px;
+    padding: 16px;
+    box-shadow: var(--ss-shadow-ground);
+  }
+
+  .mc-key {
+    width: 34px;
+  }
+}
+
+/* ---- Aircon ---- */
+
+.mc-aircon {
+  .mc-aircon__status {
+    margin: 10px 0 14px;
+    font-size: 15px;
+    font-weight: 650;
+  }
+
+  .mc-aircon__modes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    margin-bottom: 16px;
+    padding: 4px;
+    border-radius: var(--ss-radius-md);
+    background: var(--ss-fill);
+    color: var(--ss-text);
+    text-align: center;
+  }
+
+  .mc-aircon__modes span {
+    padding: 6px 0;
+    border-radius: 7px;
+  }
+
+  .mc-aircon__modes [data-on] {
+    background: var(--ss-surface);
+    box-shadow: var(--ss-shadow-card);
+    color: var(--ss-text-strong);
+    font-weight: 650;
+  }
+}
+
+.mc-aircon,
+.mc-lights {
+  .mc-aircon__target {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mc-slider {
+    position: relative;
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--ss-fill);
+  }
+
+  .mc-slider__fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+    background: var(--ss-accent);
+    transition: width 0.26s cubic-bezier(0.45, 0, 0.1, 1);
+  }
+
+  .mc-slider__knob {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    border: 3px solid var(--ss-surface);
+    border-radius: 50%;
+    background: var(--ss-accent);
+    box-shadow: 0 0 0 1px var(--ss-line);
+    transform: translate(-50%, -50%);
+    transition: left 0.26s cubic-bezier(0.45, 0, 0.1, 1);
+  }
+
+  .mc-aircon__value {
+    flex: none;
+    min-width: 52px;
+    font-size: 22px;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ---- Lights ---- */
+
+.mc-lights {
+  .mc-lights__scenes {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0 18px;
+  }
+
+  .mc-lights__scene {
+    padding: 7px 12px;
+    border: 1px solid var(--ss-line);
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-fill);
+    font-weight: 600;
+    transition:
+      background 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .mc-lights__scene[data-on] {
+    border-color: var(--ss-accent);
+    background: var(--ss-accent-soft);
+    color: var(--ss-accent-text);
+  }
+
+  .mc-lights__label {
+    margin-bottom: 10px;
+    font-weight: 650;
+  }
+
+  .mc-slider__fill,
+  .mc-slider__knob {
+    transition-duration: 1.2s;
+  }
+
+  .mc-lights__value {
+    min-width: 64px;
+  }
+}
+
+/* ---- Rooms ---- */
+
+.mc-rooms {
+  /* The plan is a drawing on paper: it stays white in dark mode too. */
+  .mc-rooms__plan {
+    position: absolute;
+    top: var(--gutter);
+    left: var(--gutter);
+    width: 400px;
+    height: 360px;
+    overflow: hidden;
+    border-radius: var(--mc-widget-radius);
+    background: #fff;
+    box-shadow: var(--ss-shadow-ground);
+  }
+
+  .mc-rooms__plan img {
+    position: absolute;
+    top: -186px;
+    left: -500px;
+    width: 960px;
+    max-width: none;
+    height: auto;
+  }
+
+  .mc-rooms__room {
+    position: absolute;
+    top: 120px;
+    left: 232px;
+    width: 132px;
+    height: 186px;
+    border: 2px solid #15803d;
+    border-radius: 4px;
+    background: rgb(34 197 94 / 18%);
+  }
+
+  .mc-rooms__name {
+    position: absolute;
+    top: 196px;
+    left: 298px;
+    padding: 4px 10px;
+    border-radius: var(--ss-radius-pill);
+    background: #15803d;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+
+  .mc-rooms__card {
+    position: absolute;
+    top: 56px;
+    right: var(--gutter);
+    width: 320px;
+    padding: 16px;
+    box-shadow: var(--ss-shadow-satellite);
+  }
+
+  .mc-rooms__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+  }
+
+  .mc-rooms__row + .mc-rooms__row {
+    border-top: 1px solid var(--ss-line-faint);
+  }
+
+  .mc-rooms__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--ss-accent-soft);
+    color: var(--ss-accent-text);
+  }
+
+  .mc-rooms__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .mc-rooms__device {
+    font-weight: 700;
+  }
+
+  .mc-rooms__state {
+    color: var(--ss-text);
+  }
+
+  .mc-label {
+    margin-bottom: 4px;
+  }
+
+  /* Narrow: the plan alone, the Room picked out on it. */
+  & .ss-stage[data-layout="compact"] {
+    --gutter: 16px;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-rooms__plan {
+    right: var(--gutter);
+    width: auto;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-rooms__plan img {
+    left: -560px;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-rooms__room {
+    left: 172px;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-rooms__name {
+    left: 238px;
+  }
+
+  & .ss-stage[data-layout="compact"] .mc-rooms__card {
+    display: none;
+  }
+}

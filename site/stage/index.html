@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- The scenes at the widths the website shows them, for `pnpm scenes:dev`
+     and for filming them. Not part of the website. -->
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Media Centre scenes</title>
+    <style>
+      @font-face {
+        font-family: "Plus Jakarta Sans Variable";
+        font-weight: 200 800;
+        src: url("../fonts/plus-jakarta-sans-latin-wght-normal.woff2") format("woff2");
+      }
+      body {
+        margin: 0;
+        padding: 32px 16px;
+        background: #f6f8fb;
+        font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #080d19;
+          color: #f1f5f9;
+        }
+      }
+      .slot {
+        max-width: 1040px;
+        margin: 0 auto 48px;
+      }
+      .slot[data-width] {
+        max-width: var(--w);
+      }
+    </style>
+    <script type="module" src="./main.tsx"></script>
+  </head>
+  <body>
+    <div class="slot" id="hero" data-stage="hero" role="img" aria-label="Hero"></div>
+    <div class="slot" id="route" data-stage="route" role="img" aria-label="Route"></div>
+    <div class="slot" id="rooms" data-stage="rooms" role="img" aria-label="Rooms" style="--w: 760px" data-width></div>
+    <div
+      class="slot"
+      id="aircon"
+      data-stage="aircon"
+      role="img"
+      aria-label="Aircon"
+      style="--w: 372px"
+      data-width
+    ></div>
+    <div
+      class="slot"
+      id="lights"
+      data-stage="lights"
+      role="img"
+      aria-label="Lights"
+      style="--w: 372px"
+      data-width
+    ></div>
+  </body>
+</html>

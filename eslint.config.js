@@ -7,9 +7,10 @@ import tseslint from "typescript-eslint";
 import { noInternetUrls } from "./eslint-rules/no-internet-urls.ts";
 
 export default tseslint.config(
-  // `.sandcastle/` is the harness that runs the agents, not media-centre itself.
+  // `.sandcastle/` is the harness that runs the agents, not media-centre itself,
+  // and `site/stage/kit/` is the Stageshow kit, vendored as it is.
   {
-    ignores: ["**/node_modules/", "**/dist/", "test-results/", "playwright-report/", ".sandcastle/"],
+    ignores: ["**/node_modules/", "**/dist/", "test-results/", "playwright-report/", ".sandcastle/", "site/stage/kit/"],
   },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
@@ -29,7 +30,7 @@ export default tseslint.config(
     rules: { "media-centre/no-internet-urls": "error" },
   },
   {
-    files: ["packages/remote/src/**", "packages/player/src/**"],
+    files: ["packages/remote/src/**", "packages/player/src/**", "site/stage/**"],
     languageOptions: { globals: { ...globals.browser } },
   },
   // The Remote meets WCAG 2.2 at Level AA, so its markup is checked as it is written.
