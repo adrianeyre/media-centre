@@ -19,9 +19,9 @@
   "dependencies": {
     "@media-centre/shared": "workspace:*",
     "alexa-remote2": "^8.1.1",
-    "oui-data": "^2.1.46",
+    "oui-data": "^2.1.51",
     "ring-client-api": "^14.3.0",
-    "ws": "^8.22.0"
+    "ws": "^8.22.1"
   },
   "devDependencies": {
     "@media-centre/player": "workspace:*",
