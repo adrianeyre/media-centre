@@ -69,6 +69,20 @@ jobs:
           node-version: 26.10.0
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec semantic-release
+      # GitHub sometimes answers the release's push with a server error (500)
+      # while it is having an incident, and nothing is released. Try again, up
+      # to three times. Before each retry, go back to the commit as checked out
+      # and to the tags GitHub has, so the release commit made locally isn't
+      # released twice and CHANGELOG.md doesn't get the version twice.
+      - name: Release
+        run: |
+          for attempt in 1 2 3; do
+            if pnpm exec semantic-release; then exit 0; fi
+            if [ "$attempt" = 3 ]; then exit 1; fi
+            echo "::warning::The release failed on attempt $attempt; trying again in $((attempt * 60)) seconds."
+            sleep $((attempt * 60))
+            git reset --hard "$GITHUB_SHA"
+            git fetch --force --prune --prune-tags --tags origin
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
