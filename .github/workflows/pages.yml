@@ -86,3 +86,19 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+      # Tells Bing, Yandex, Seznam, Naver and Yep (every engine that shares
+      # IndexNow) that the page has changed, so they recrawl it now rather
+      # than whenever they next visit. The key is the one site/build.ts
+      # publishes at the site's root. Google has no ping; it reads the
+      # sitemap that robots.txt names. A failed ping never fails a deployment.
+      - name: Ping IndexNow
+        continue-on-error: true
+        env:
+          SITE_URL: https://media-centre.adrianeyre.co.uk
+          INDEXNOW_KEY: 6dcb83f617a0bfa53d71e0f371068d5f
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 30 \
+            --header "Content-Type: application/json; charset=utf-8" \
+            --data "{\"host\":\"${SITE_URL#https://}\",\"key\":\"${INDEXNOW_KEY}\",\"keyLocation\":\"${SITE_URL}/${INDEXNOW_KEY}.txt\",\"urlList\":[\"${SITE_URL}/\"]}" \
+            https://api.indexnow.org/indexnow

@@ -18,11 +18,14 @@
     <script>
       document.documentElement.classList.replace("no-js", "js");
     </script>
-    <title>Media Centre: one remote for your whole home</title>
+    <title>Media Centre: a free, self-hosted remote for your whole home</title>
     <meta
       name="description"
-      content="Media Centre is a free, self-hosted remote for your whole home: Samsung TVs, Midea air conditioners, Lepro lights, Hive heating, Amazon Echo and Ring, room by room, and your own films, shows and music on any TV. It runs on your own Hub, with no account."
+      content="Free, self-hosted smart home remote: control Samsung TVs, Midea aircon, Lepro lights, Hive heating, Echo and Ring by room, and play your own media on any TV."
     />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Adrian Eyre" />
+    <meta name="application-name" content="Media Centre" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#080d19" media="(prefers-color-scheme: dark)" />
@@ -30,17 +33,20 @@
     <link rel="icon" href="favicon.ico" sizes="32x32" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="sitemap.xml" />
     <link rel="mask-icon" href="mask-icon.svg" color="#15803d" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Media Centre" />
     <meta property="og:locale" content="en_GB" />
-    <meta property="og:title" content="Media Centre: one remote for your whole home" />
+    <meta property="og:title" content="Media Centre: a free, self-hosted remote for your whole home" />
     <meta
       property="og:description"
       content="TVs, air conditioners, lights, heating, Echo and Ring, room by room, and your films, shows and music on any TV. Self-hosted, with no account."
     />
     <meta property="og:url" content="{{SITE_URL}}/" />
     <meta property="og:image" content="{{SITE_URL}}/og-image.png" />
+    <meta property="og:image:secure_url" content="{{SITE_URL}}/og-image.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -49,7 +55,7 @@
       content="Media Centre: one remote for your whole home. Runs on your own Hub, no account, open source."
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Media Centre: one remote for your whole home" />
+    <meta name="twitter:title" content="Media Centre: a free, self-hosted remote for your whole home" />
     <meta
       name="twitter:description"
       content="TVs, air conditioners, lights, heating, Echo and Ring, room by room, and your films, shows and music on any TV. Self-hosted, with no account."
@@ -59,25 +65,96 @@
       name="twitter:image:alt"
       content="Media Centre: one remote for your whole home. Runs on your own Hub, no account, open source."
     />
+    <!-- Structured data, for search engines' knowledge of the site, its
+         author and the software. VERSION and DATE_MODIFIED come from
+         package.json and the last commit, in site/build.ts. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Media Centre",
-        "description": "One remote for your whole home: Samsung TVs, Midea air conditioners, Lepro lights, Hive heating, Amazon Echo and Ring, room by room, and your own films, shows and music on any TV. Self-hosted on your own Hub, with no account.",
-        "url": "{{SITE_URL}}/",
-        "image": "{{SITE_URL}}/og-image.png",
-        "screenshot": "{{SITE_URL}}/images/screenshots/desktop-tv.png",
-        "applicationCategory": "HomeApplication",
-        "operatingSystem": "Windows, macOS, Linux, Docker",
-        "softwareRequirements": "Node 26 or later, pnpm 12 and ffmpeg, or Docker",
-        "license": "https://opensource.org/license/isc-license-txt",
-        "sameAs": "{{REPO_URL}}",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "GBP"
-        }
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "{{SITE_URL}}/#website",
+            "url": "{{SITE_URL}}/",
+            "name": "Media Centre",
+            "description": "A free, self-hosted remote for your whole home.",
+            "inLanguage": "en-GB",
+            "publisher": { "@id": "{{SITE_URL}}/#author" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "{{SITE_URL}}/#webpage",
+            "url": "{{SITE_URL}}/",
+            "name": "Media Centre: a free, self-hosted remote for your whole home",
+            "description": "Free, self-hosted smart home remote: control Samsung TVs, Midea aircon, Lepro lights, Hive heating, Echo and Ring by room, and play your own media on any TV.",
+            "inLanguage": "en-GB",
+            "isPartOf": { "@id": "{{SITE_URL}}/#website" },
+            "about": { "@id": "{{SITE_URL}}/#software" },
+            "mainEntity": { "@id": "{{SITE_URL}}/#software" },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "{{SITE_URL}}/og-image.png",
+              "width": 1200,
+              "height": 630
+            },
+            "dateModified": "{{DATE_MODIFIED}}"
+          },
+          {
+            "@type": "Person",
+            "@id": "{{SITE_URL}}/#author",
+            "name": "Adrian Eyre",
+            "url": "https://github.com/adrianeyre",
+            "sameAs": ["https://github.com/adrianeyre"]
+          },
+          {
+            "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+            "@id": "{{SITE_URL}}/#software",
+            "name": "Media Centre",
+            "alternateName": "Media Centre Remote",
+            "description": "One remote for your whole home: Samsung TVs, Midea air conditioners, Lepro lights, Hive heating, Amazon Echo and Ring, room by room, and your own films, shows and music on any TV. Self-hosted on your own Hub, with no account.",
+            "url": "{{SITE_URL}}/",
+            "image": "{{SITE_URL}}/og-image.png",
+            "screenshot": [
+              "{{SITE_URL}}/images/screenshots/desktop-tv.png",
+              "{{SITE_URL}}/images/screenshots/desktop-rooms.png",
+              "{{SITE_URL}}/images/screenshots/desktop-lights.png",
+              "{{SITE_URL}}/images/screenshots/phone-tv.png"
+            ],
+            "applicationCategory": "HomeApplication",
+            "applicationSubCategory": "Smart home remote control",
+            "operatingSystem": "Windows, macOS, Linux, Docker",
+            "softwareRequirements": "Node 26 or later, pnpm 12 and ffmpeg, or Docker",
+            "softwareVersion": "{{VERSION}}",
+            "dateModified": "{{DATE_MODIFIED}}",
+            "featureList": [
+              "Samsung TV remote control, apps and Now Showing",
+              "Play films, shows and music from a PC or NAS on any TV",
+              "Midea air conditioner control",
+              "Lepro light control and Light Scenes",
+              "Hive heating and hot water",
+              "Amazon Echo announcements and Ask Alexa",
+              "Ring doorbells, cameras and chimes",
+              "Rooms on your own floor plan",
+              "Home network and Bluetooth device discovery"
+            ],
+            "keywords": "smart home, home automation, self-hosted, remote control, Samsung TV, Tizen, media server, NAS, Midea, Hive, Alexa, Ring, open source",
+            "isAccessibleForFree": true,
+            "license": "https://opensource.org/license/isc-license-txt",
+            "codeRepository": "{{REPO_URL}}",
+            "programmingLanguage": "TypeScript",
+            "downloadUrl": "{{REPO_URL}}",
+            "installUrl": "{{SITE_URL}}/#quick-start",
+            "releaseNotes": "{{REPO_URL}}/blob/main/CHANGELOG.md",
+            "author": { "@id": "{{SITE_URL}}/#author" },
+            "sameAs": ["{{REPO_URL}}"],
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "GBP",
+              "availability": "https://schema.org/InStock"
+            }
+          }
+        ]
       }
     </script>
     <link
