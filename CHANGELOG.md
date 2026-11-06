@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/adrianeyre/media-centre/compare/v1.1.0...v1.2.0) (2026-11-06)
+
+
+### Features
+
+* **site:** strengthen search and link-preview metadata ([0b4a1d8](https://github.com/adrianeyre/media-centre/commit/0b4a1d8324dcd01bb25ba0aef8cc65c69fbe2433))
+
 # [1.1.0](https://github.com/adrianeyre/media-centre/compare/v1.0.0...v1.1.0) (2026-11-04)
 
 

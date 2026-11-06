@@ -1,6 +1,6 @@
 {
   "name": "@media-centre/hub",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "The always-on process that serves the Remote, controls every Appliance and serves Media Files to the Player.",
   "type": "module",
