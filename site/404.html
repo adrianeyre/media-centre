@@ -1,0 +1,83 @@
+<!doctype html>
+<!--
+  The page GitHub Pages serves, with a 404 status, for any path the site has
+  not got. It can be served at any depth, so it names everything by the site's
+  full address, and keeps its styles inline. Search engines are told not to
+  index it. site/build.ts fills in its placeholders.
+-->
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found · Media Centre</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="{{SITE_URL}}/favicon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        --bg: #f6f8fb;
+        --text: #0f172a;
+        --muted: #475569;
+        --primary: #15803d;
+        --primary-foreground: #ffffff;
+        --focus: #1d4ed8;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #080d19;
+          --text: #f1f5f9;
+          --muted: #a3b1c6;
+          --primary: #4ade80;
+          --primary-foreground: #052e16;
+          --focus: #93c5fd;
+        }
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        box-sizing: border-box;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          16px/1.5 system-ui,
+          sans-serif;
+        text-align: center;
+      }
+      h1 {
+        font-size: 2rem;
+        line-height: 1.2;
+        margin: 16px 0 8px;
+      }
+      p {
+        color: var(--muted);
+        margin: 0 0 24px;
+      }
+      a {
+        display: inline-block;
+        min-height: 44px;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        border-radius: 999px;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      a:focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="{{SITE_URL}}/favicon.svg" alt="" width="56" height="56" />
+      <h1>Page not found</h1>
+      <p>There's nothing at this address. Media Centre's website is a single page.</p>
+      <a href="{{SITE_URL}}/">Go to Media Centre</a>
+    </main>
+  </body>
+</html>
